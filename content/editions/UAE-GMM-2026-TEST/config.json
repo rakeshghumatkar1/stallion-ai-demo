@@ -1,0 +1,1176 @@
+{
+  "_readme": "Production demo configuration derived from Google Drive file 03. UAE/Dubai only. Unknown current-edition facts remain null. Category names are year-neutral templates derived from the captured 2025 UAE category labels; exact current-edition wording/availability remains subject to organiser confirmation.",
+  "source_document": "https://docs.google.com/document/d/15DQivImAUT1TdbRBOdiSSW8ahkfADD5Vgkyvngkibdw/edit",
+  "slug": "UAE-GMM-2026-TEST",
+  "name": "The 4th Edition of The Great Marketing & Business Minds UAE 2026",
+  "country": "AE",
+  "year": 2026,
+  "edition_number": 4,
+  "status": "draft",
+  "eligibility_period": null,
+  "nomination_open": null,
+  "nomination_deadline": null,
+  "event_date": null,
+  "venue": null,
+  "fees": null,
+  "taxes": null,
+  "categories": [
+    {
+      "name": "The Great Marketing Minds UAE Campaign of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE Digital Marketing Campaign of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE Search Engine Optimization (SEO) Award of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE Search Engine Marketing (SEM) Award of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE Social Media Campaign of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE User Interface & Experience (UI / UX) Award of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE Mobile Campaign Award of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE TV Campaign of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE Print Campaign of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE Content Marketing Award of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE Experiential Marketing Award of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE Facebook Campaign of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE YouTube Campaign of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE X Campaign of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE Influencer Campaign of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE LinkedIn Campaign of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE Instagram Campaign of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE Mobile App Award of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE Online Lead Generation Campaign of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE Regional / Vernacular Campaign Award of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE Internal Communication Award of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE Marketing Communications – B2C Campaign of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE Marketing Communications – B2B Campaign of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE e-Commerce experience of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE Most Admired Loyalty Program of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE Consumer Insights Award of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE I.T. Security Initiative of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE Loyalty Program of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE CRM Program of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE CLCM Program of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE Customer Orientation of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE Financial Inclusion Initiative of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE Most Admired service provider of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE Best Use of Mobile Technology of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE Financial Crime Prevention Product / Service of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE Customer Engagement Initiative of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE Product Innovation of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE Technology Initiative of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE Data Analytics Initiative of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE Excellence in Distribution of Financial Products of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE Excellence in Claims Service of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE Lead Mapping & Tracking of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE Overall Excellence in Financial Services Sector of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE Quickest Online Loan Approval of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE Quickest Online Insurance Approval of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE Quickest Online investment Approval of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE Insurtech of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE Innovative Fintech Product of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE Lending Tech of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE Mobile Payment Product / Service of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE Payment Technology Solution Provider of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE Prepaid Card Solution of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE BNPL Product of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE Mobile Wallet of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE Insurance Aggregator of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE Mutual Funds Aggregator of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE Investment Aggregator of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE Fastest Growing Company of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE Marketing Head of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE Digital Marketing Head of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE Corporate Communication (PR) Professional of Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE Young Marketer of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE Brand Builder of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE Woman Marketing Leader of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE Woman Digital Marketing Leader of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE Innovative Marketing Leader of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE Chief Marketing Officer of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE Chief Executive Officer of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE Chief Operating Officer of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE Chief Technology Officer of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE Chief Information Officer of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE Chief Financial Officer of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE Chief Human Resources Officer of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE Full Service Agency of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE Digital Agency of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE Search Engine Optimization (SEO) Agency of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE Search Engine Marketing (SEM) Agency of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE Social Media Agency of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE UI/UX Digital Agency of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE Content Agency of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE ROI driven Agency of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE Mobile App Agency of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE Social Media Influencer Agency of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE Branding Building Agency of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE PR Agency of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE Strategy & Consulting Agency of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE BTL Agency of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE Website Design Agency of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE Marketing Automation Agency of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE Digital Media buying Agency of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE Conventional Media buying Agency of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE Google AdWords Agency of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE CEO Agency of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE Brand of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE New Brand Launch of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE Re-Branding Campaign of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE Customer Education Campaign of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE Promising Financial Brand of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE Analytics Award of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE Marketing Automation Award of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    },
+    {
+      "name": "The Great Marketing Minds UAE Digital Transformation Agency of the Year",
+      "official_name": null,
+      "description": "UAE award category template captured from the previous website. Current-edition availability and exact wording should be confirmed by the organiser.",
+      "eligibility_rules": {
+        "summary": "Category matching is advisory. Final applicability and eligibility require organiser confirmation."
+      },
+      "client_approval_required": false,
+      "active": true
+    }
+  ],
+  "forms": [],
+  "jury": [
+    {
+      "name": "Santosh Tripathy",
+      "details": "Director - Data & Analytics, Financial Services Consulting, PwC",
+      "confidential": false
+    },
+    {
+      "name": "Jon Barber",
+      "details": "Vice President, Marketing & Communications, TECOM Group",
+      "confidential": false
+    },
+    {
+      "name": "Mehwish Sarwar",
+      "details": "GCC Ambassador, Women in Mentoring (WIM)",
+      "confidential": false
+    },
+    {
+      "name": "Surabhee Gupta",
+      "details": "Campaign Head Digital Marketing, GBS Dubai",
+      "confidential": false
+    },
+    {
+      "name": "Balaaji Vaidyanathan",
+      "details": "Director & Head – Marketing, CEEMEA, Franklin Templeton",
+      "confidential": false
+    },
+    {
+      "name": "Ashutosh Mehta",
+      "details": "Digital Marketing, WWICS Group of Companies",
+      "confidential": false
+    },
+    {
+      "name": "Gaurav Sinha",
+      "details": "Marketing Director, AMEA, Domino’s Pizza",
+      "confidential": false
+    },
+    {
+      "name": "Reham Abdallah",
+      "details": "Regional Marketing Manager, GIG Gulf Insurance",
+      "confidential": false
+    },
+    {
+      "name": "Sanaya Zubairy",
+      "details": "Zurich International Life Insurance, Middle East",
+      "confidential": false
+    },
+    {
+      "name": "Suad Merchant",
+      "details": "Chief Marketing Officer, GEMS Education",
+      "confidential": false
+    },
+    {
+      "name": "Samir Talkhani",
+      "details": "Senior Vice President, Head of Digital Consumer Acquisition & Sales, Mashreq Bank",
+      "confidential": false
+    },
+    {
+      "name": "Vidisha Debsarkar",
+      "details": "Director - Online Business & Marketing, Finmart",
+      "confidential": false
+    },
+    {
+      "name": "Dr Sreejit Chakrabarty",
+      "details": "Director of AI, GEMS Education",
+      "confidential": false
+    },
+    {
+      "name": "Gopal Sudhakaran",
+      "details": "Marketing Lead, Grand Stores",
+      "confidential": false
+    },
+    {
+      "name": "Shreeja Nair",
+      "details": "Marketing Head, RR Extrusions",
+      "confidential": false
+    },
+    {
+      "name": "Arzan Khambatta",
+      "details": "Regional Head Middle East, OneVasco",
+      "confidential": false
+    },
+    {
+      "name": "Gareema Kaushik",
+      "details": "Chief Digital Officer, Al Fardan Exchange LLC",
+      "confidential": false
+    },
+    {
+      "name": "Dharmendra Mehta",
+      "details": "Managing Director MEA, Fynd",
+      "confidential": false
+    },
+    {
+      "name": "Zeeshan Haider",
+      "details": "Head of Marketing & Communications, Al Wathba National Insurance",
+      "confidential": false
+    },
+    {
+      "name": "Sharad VK",
+      "details": "Accomplished Marketer",
+      "confidential": false
+    },
+    {
+      "name": "Usama Zafar",
+      "details": "VP Customer Lifecycle, Dubai Islamic Bank",
+      "confidential": false
+    },
+    {
+      "name": "Sonal Dawda",
+      "details": "Head of Marketing & Corporate Communications, Dubai National Insurance (DNI)",
+      "confidential": false
+    },
+    {
+      "name": "Apollo Irungbam",
+      "details": "Head of Marketing, Sky Links Capital",
+      "confidential": false
+    },
+    {
+      "name": "Swaroop Powar",
+      "details": "Omnichannel Business Partner, Sanofi Greater Gulf",
+      "confidential": false
+    },
+    {
+      "name": "Aaryan Kapur",
+      "details": "Group Head - Digital Marketing, Aster DM Healthcare & Medcare Group",
+      "confidential": false
+    },
+    {
+      "name": "Mohammed Suhail",
+      "details": "Head of Digital Marketing, Dabur International Ltd",
+      "confidential": false
+    },
+    {
+      "name": "Natasha Chandnani",
+      "details": "Head of Brand & Marketing, Banke International Properties",
+      "confidential": false
+    }
+  ],
+  "contact": {
+    "team": "Digital Stallions Forum UAE",
+    "email": "paurush.sonkar@icloud.com",
+    "phone": null,
+    "whatsapp": null,
+    "website": "https://thegreatmarketingminds.ae/"
+  },
+  "sponsors": null,
+  "announcements": null
+}
