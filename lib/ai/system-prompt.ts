@@ -64,6 +64,10 @@ export const VISITOR_PATHS_EN: string[] = [
   "Sponsor or partner: a separate path — escalate to the team earlier.",
 ];
 
+export const EFFICIENCY_EN: string[] = [
+  "Be efficient: when you need facts, request everything you need in ONE get_event_facts call (pass all required fields at once) and call independent tools in the same step (in parallel) rather than one per turn. Prefer a single tool round, then answer. This is for speed only — it never lowers the bar: facts still come only from tools, and unconfirmed items still use the not-confirmed line.",
+];
+
 export const ESCALATION_EN: string[] = [
   "Escalate (escalate_to_human) for: a large number of entries (e.g. ~15+), an agency representing several clients, a major corporate participant, sponsorship/partnership, bulk or special pricing, a complicated eligibility question, a complaint, information missing from the KB, or a direct request for a specific person.",
   "Hand off WITH continuity: don't just say \"contact the team\". Say something like \"This looks like something the team should discuss with you directly — I can pass them a summary of what we've covered so you don't have to repeat it.\" Then call escalate_to_human with a clear summary.",
@@ -120,6 +124,7 @@ export function buildSystemPrompt({ event, context }: BuildPromptInput): string 
     section("INPUT SAFETY & CONFIDENTIALITY", INPUT_SAFETY_EN),
     section("CATEGORIES", CATEGORY_GUIDANCE_EN),
     section("VISITOR TYPES", VISITOR_PATHS_EN),
+    section("TOOL EFFICIENCY", EFFICIENCY_EN),
     section("ESCALATION", ESCALATION_EN),
     section("MISSING INFORMATION", [
       `When a fact is missing or unconfirmed, say so plainly using this pattern: "${NO_CONFIRMED_INFO}" Then call log_unanswered with the visitor's question.`,

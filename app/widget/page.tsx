@@ -47,7 +47,7 @@ function RichText({ text }: { text: string }) {
             href={piece}
             target="_blank"
             rel="noopener noreferrer"
-            className="underline text-stallion-accent"
+            className="font-medium text-brand-primary-dark underline"
           >
             {piece}
           </a>
@@ -76,15 +76,29 @@ export default function WidgetPage() {
   const showThinking = isBusy && (!lastMessage || lastMessage.role !== "assistant" || !lastMessage.content);
 
   return (
-    <div className="flex h-full min-h-screen flex-col bg-white text-slate-900">
-      <header className="border-b border-slate-200 bg-stallion px-4 py-3 text-white">
-        <div className="text-sm font-semibold">{UI_EN.title}</div>
-        <div className="text-xs text-slate-300">{UI_EN.subtitle}</div>
+    <div className="flex h-full min-h-screen flex-col bg-white text-brand-fg">
+      <header className="flex items-center gap-3 bg-brand-dark px-4 py-3">
+        {/* White rounded tile — the brand mark is a white-background JPG, so it
+            never sits flat on the black header. */}
+        <div className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-brand bg-white p-1 shadow-sm">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/brand/mark-2026.jpg"
+            alt="The Great Marketing &amp; Business Minds UAE 2026"
+            className="h-full w-full object-contain"
+          />
+        </div>
+        <div className="min-w-0">
+          <div className="truncate text-sm font-semibold leading-tight text-brand-primary">{UI_EN.title}</div>
+          <div className="truncate text-xs text-white/60">{UI_EN.subtitle}</div>
+        </div>
       </header>
 
-      <p className="bg-slate-50 px-4 py-2 text-[11px] leading-snug text-slate-500">{UI_EN.disclosure}</p>
+      <p className="border-b border-slate-200 bg-white px-4 py-2 text-[11px] leading-snug text-slate-500">
+        {UI_EN.disclosure}
+      </p>
 
-      <div className="flex-1 overflow-y-auto px-4 py-3">
+      <div className="flex-1 overflow-y-auto px-4 py-4">
         <div className="space-y-3">
           <Bubble role="assistant" label={UI_EN.assistant}>
             {UI_EN.welcome}
@@ -98,7 +112,7 @@ export default function WidgetPage() {
                   type="button"
                   disabled={isBusy}
                   onClick={() => append({ role: "user", content: qa.send })}
-                  className="rounded-full border border-slate-300 bg-white px-3 py-1 text-xs text-slate-700 hover:border-stallion-accent hover:text-stallion-accent disabled:opacity-50"
+                  className="rounded-full border border-brand-primary bg-white px-3 py-1.5 text-xs font-medium text-brand-fg shadow-sm transition hover:bg-brand-primary hover:text-brand-fg disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   {qa.label}
                 </button>
@@ -118,7 +132,7 @@ export default function WidgetPage() {
 
           {showThinking && (
             <Bubble role="assistant" label={UI_EN.assistant}>
-              <span className="text-slate-400">{UI_EN.thinking}</span>
+              <TypingDots />
             </Bubble>
           )}
 
@@ -127,24 +141,35 @@ export default function WidgetPage() {
         </div>
       </div>
 
-      <form onSubmit={handleSubmit} className="flex gap-2 border-t border-slate-200 p-3">
+      <form onSubmit={handleSubmit} className="flex items-center gap-2 border-t border-slate-200 bg-white p-3">
         <input
           value={input}
           onChange={handleInputChange}
           placeholder={UI_EN.placeholder}
           maxLength={4000}
           autoComplete="off"
-          className="flex-1 rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-stallion-accent"
+          className="flex-1 rounded-full border border-slate-300 px-4 py-2.5 text-sm outline-none transition focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20"
         />
         <button
           type="submit"
           disabled={isBusy || !input.trim()}
-          className="rounded-md bg-stallion-accent px-4 py-2 text-sm font-medium text-white disabled:opacity-50"
+          className="shrink-0 rounded-full bg-brand-primary px-5 py-2.5 text-sm font-semibold text-brand-fg shadow-sm transition hover:bg-brand-primary-dark hover:text-white disabled:cursor-not-allowed disabled:opacity-40"
         >
           {UI_EN.send}
         </button>
       </form>
     </div>
+  );
+}
+
+/** Animated three-dot typing indicator (replaces the static "Checking…"). */
+function TypingDots() {
+  return (
+    <span className="inline-flex items-center gap-1 py-1" aria-label={UI_EN.thinking} role="status">
+      <span className="h-1.5 w-1.5 rounded-full bg-brand-primary animate-typing-bounce" />
+      <span className="h-1.5 w-1.5 rounded-full bg-brand-primary animate-typing-bounce [animation-delay:150ms]" />
+      <span className="h-1.5 w-1.5 rounded-full bg-brand-primary animate-typing-bounce [animation-delay:300ms]" />
+    </span>
   );
 }
 
@@ -161,11 +186,17 @@ function Bubble({
   return (
     <div className={`flex ${isUser ? "justify-end" : "justify-start"}`}>
       <div
-        className={`max-w-[85%] rounded-lg px-3 py-2 text-sm ${
-          isUser ? "bg-stallion-accent text-white" : "bg-slate-100 text-slate-900"
+        className={`max-w-[85%] rounded-2xl px-3.5 py-2.5 text-sm shadow-bubble ${
+          isUser
+            ? "rounded-br-md bg-brand-primary text-brand-fg"
+            : "rounded-bl-md bg-slate-100 text-brand-fg ring-1 ring-slate-200"
         }`}
       >
-        <div className={`mb-0.5 text-[10px] uppercase tracking-wide ${isUser ? "text-indigo-100" : "text-slate-400"}`}>
+        <div
+          className={`mb-1 text-[10px] font-semibold uppercase tracking-wider ${
+            isUser ? "text-brand-fg/60" : "text-slate-400"
+          }`}
+        >
           {label}
         </div>
         {children}

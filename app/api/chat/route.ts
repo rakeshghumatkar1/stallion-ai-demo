@@ -20,12 +20,13 @@ import { conversations, messages } from "@/lib/db/schema";
 import { getActiveEvent } from "@/lib/event/active";
 import { retrieve } from "@/lib/kb/retrieve";
 import { buildSystemPrompt } from "@/lib/ai/system-prompt";
-import { getModel } from "@/lib/ai/model";
+import { getChatProviderOptions, getModel } from "@/lib/ai/model";
 import { makeTools } from "@/lib/ai/tools";
 import {
   detectPromptInjection,
   detectUnverifiedClaim,
   groundingCheck,
+  needsKnowledgeRetrieval,
   sanitizeUserText,
   wrapUntrustedUserContent,
 } from "@/lib/ai/guardrails";
@@ -149,13 +150,18 @@ export async function POST(req: Request) {
       });
     }
 
-    // 3. Retrieval — scoped + approved + in-date. If embeddings are down the
-    //    turn still works from tools alone; the model just sees no CONTEXT.
+    // 3. Retrieval — scoped + approved + in-date. Skipped for trivial turns
+    //    (greetings, short routing) to save an embed + vector round-trip; this
+    //    is latency-only and never changes what's allowed — hard facts still
+    //    come from tools. If embeddings are down the turn still works from tools
+    //    alone; the model just sees no CONTEXT.
     let context: RetrievedChunk[] = [];
-    try {
-      context = await retrieve({ eventId: event.id, query: lastText });
-    } catch (err) {
-      console.error("[chat] retrieval failed; continuing with empty context", err);
+    if (needsKnowledgeRetrieval(lastText)) {
+      try {
+        context = await retrieve({ eventId: event.id, query: lastText });
+      } catch (err) {
+        console.error("[chat] retrieval failed; continuing with empty context", err);
+      }
     }
 
     // 4. Prompt + tools, both bound to this event.
@@ -168,11 +174,13 @@ export async function POST(req: Request) {
       system,
       messages: modelMessages,
       tools: makeTools(ctx),
-      maxSteps: 5,
-      // OpenAI "strict" tool schemas reject optional properties (get_form's
-      // category, every capture_lead field). Our Zod schemas already validate
-      // every tool argument server-side, so strict mode adds nothing here.
-      providerOptions: { openai: { strictSchemas: false } },
+      // One tool round then answer is the common path; 3 leaves headroom for a
+      // dependent second round (e.g. facts → form) without inviting long
+      // multi-step loops. The model is told to batch tool calls in parallel.
+      maxSteps: 3,
+      // Fast tier + low reasoning effort for latency; strictSchemas:false
+      // because our tools have optional args (Zod validates them server-side).
+      providerOptions: getChatProviderOptions(),
       // The data stream masks errors from the visitor (see getErrorMessage
       // below); log the real one server-side so failures are diagnosable.
       onError({ error }) {

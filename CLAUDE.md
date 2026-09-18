@@ -242,6 +242,12 @@ tables. `scripts/migrate.ts` also guarantees the extension exists.
 - Keep the admin minimal: read views + the two editors (event, knowledge).
 - Comments explain *why*.
 
+## Commit hygiene
+
+- **Never** add `Co-Authored-By`, `Claude-Session`, `Generated with Claude Code`,
+  or any similar trailer/attribution line to commit messages. Commit messages
+  describe the change and nothing else. This applies to every commit.
+
 ## Out of scope for Phase 1 (leave short TODOs only)
 
 Auto-emailing forms, selecting the form by category automatically, recording

@@ -1,6 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  // Hide the floating Next.js dev badge (the "N") so it doesn't overlap the
+  // widget UI during local development. Presentation only.
+  devIndicators: false,
   // The widget is embedded via an iframe on third-party award sites, so we must
   // NOT send X-Frame-Options: DENY. There is no per-request edition — only the
   // pinned event: the deployment serves one event (ACTIVE_EVENT_ID), so the

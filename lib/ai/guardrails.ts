@@ -79,6 +79,42 @@ export function detectUnverifiedClaim(text: string): ClaimResult {
   return { claim: matches.length > 0, matches };
 }
 
+/**
+ * Decide whether a turn needs KB vector retrieval (embeddings + pgvector query).
+ *
+ * This is a LATENCY optimisation only — it never changes what is allowed. Hard
+ * facts always come from tools (get_event_facts etc.), which run regardless of
+ * this decision. We only skip the KB context fetch for turns that plainly don't
+ * need prose knowledge: greetings, acknowledgements, and short routing
+ * statements ("I represent a brand"). Anything with a question mark or a
+ * knowledge signal keyword still retrieves, so answer quality is preserved.
+ *
+ * When in doubt, retrieve. The default for non-trivial input is true.
+ */
+const GREETING_ONLY_RE =
+  /^(hi|hello|hey+|hiya|yo|good (morning|afternoon|evening)|thanks?|thank you|thankyou|thx|ok(ay)?|cool|great|awesome|nice|got it|sure|yes|yep|no|nope|bye|goodbye)\b[\s!.,]*$/i;
+
+const KNOWLEDGE_SIGNAL_RE =
+  /\b(about|event|date|dates|when|where|venue|deadline|open|opens|close|closes|nominat|categor|fee|fees|cost|price|pricing|pay|payment|tax|taxes|gst|vat|refund|discount|form|forms|eligib|submit|submission|entry|entries|award|awards|sponsor|sponsorship|partner|partnership|rule|rules|require|requirement|winner|jury|contact|how|what|which|who|why|whom|whose)\b/i;
+
+/** Max length for a message to be treated as a short, no-signal routing turn. */
+const SHORT_ROUTING_MAX = 64;
+
+export function needsKnowledgeRetrieval(text: string): boolean {
+  const t = (text ?? "").trim();
+  if (!t) return false;
+  // A direct question always retrieves.
+  if (t.includes("?")) return true;
+  // Pure greeting / acknowledgement: no knowledge needed.
+  if (GREETING_ONLY_RE.test(t)) return false;
+  // Any knowledge signal keyword: retrieve.
+  if (KNOWLEDGE_SIGNAL_RE.test(t)) return true;
+  // Short statement with no signal (e.g. "I represent a brand"): skip.
+  if (t.length <= SHORT_ROUTING_MAX) return false;
+  // Longer free text with no obvious signal: retrieve to be safe.
+  return true;
+}
+
 /** Normalize + cap raw visitor input. Never throws. */
 export function sanitizeUserText(text: string): string {
   // Strip NUL bytes (they break Postgres text columns), cap length, trim.

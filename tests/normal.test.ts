@@ -4,7 +4,7 @@
 import { describe, expect, it } from "vitest";
 import { resolveFacts, SUGGESTION_DISCLAIMER } from "@/lib/ai/tools";
 import { chunkText } from "@/lib/kb/ingest";
-import { groundingCheck } from "@/lib/ai/guardrails";
+import { groundingCheck, needsKnowledgeRetrieval } from "@/lib/ai/guardrails";
 import { buildSystemPrompt } from "@/lib/ai/system-prompt";
 import { FACT_FIELDS, QUICK_ACTIONS } from "@/lib/types";
 import { makeEvent } from "./helpers";
@@ -98,6 +98,31 @@ describe("system prompt assembly", () => {
     const prompt = buildSystemPrompt({ event: makeEvent(), context: [] });
     expect(prompt).toMatch(/no relevant approved knowledge-base passages/i);
     expect(prompt).toContain("log_unanswered");
+  });
+});
+
+describe("retrieval gating (latency, not looser)", () => {
+  it("skips retrieval for greetings and short routing statements", () => {
+    for (const t of ["hi", "Hello!", "thanks", "ok", "I represent a brand.", "I'm nominating as an individual."]) {
+      expect(needsKnowledgeRetrieval(t), t).toBe(false);
+    }
+  });
+
+  it("retrieves for any question or knowledge-signal turn", () => {
+    for (const t of [
+      "When and where is the event?",
+      "Tell me about this event.",
+      "How do I nominate?",
+      "What are the fees?",
+      "Can you help me find categories that fit my work?",
+      "I'm interested in sponsorship or partnership.",
+    ]) {
+      expect(needsKnowledgeRetrieval(t), t).toBe(true);
+    }
+  });
+
+  it("empty input needs nothing", () => {
+    expect(needsKnowledgeRetrieval("   ")).toBe(false);
   });
 });
 

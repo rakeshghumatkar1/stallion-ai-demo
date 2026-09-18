@@ -90,8 +90,6 @@ export interface QuickAction {
 
 export const QUICK_ACTIONS: QuickAction[] = [
   { label: "Explore the event", send: "Tell me about this event." },
-  { label: "I want to participate", send: "I'd like to participate. How do I nominate?" },
-  { label: "Help me identify categories", send: "Can you help me find categories that fit my work?" },
   { label: "I represent a brand", send: "I represent a brand." },
   { label: "I represent an agency", send: "I represent an agency." },
   { label: "Individual nomination", send: "I'm nominating as an individual." },
