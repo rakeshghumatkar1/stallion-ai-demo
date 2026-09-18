@@ -9,6 +9,13 @@
  * dates or another event.
  */
 import config from "@/content/editions/UAE-GMM-2026-TEST/config.json";
+import type { EventContact, EligibilityRules } from "@/lib/db/schema";
+
+const UAE_CONTACT: EventContact = {
+  team: "Digital Stallions Forum UAE",
+  email: "paurush.sonkar@icloud.com",
+  website: "https://thegreatmarketingminds.ae/",
+};
 
 export const UAE_EVENT = {
   slug: "UAE-GMM-2026-TEST",
@@ -24,13 +31,7 @@ export const UAE_EVENT = {
   nominationDeadline: null,
   fees: null,
   taxes: null,
-  contact: {
-    team: "Digital Stallions Forum UAE",
-    email: "paurush.sonkar@icloud.com",
-    phone: null,
-    whatsapp: null,
-    website: "https://thegreatmarketingminds.ae/",
-  },
+  contact: UAE_CONTACT,
   sponsors: null,
   announcements: null,
 } as const;
@@ -39,11 +40,7 @@ export type UaeCategory = {
   name: string;
   officialName: string | null;
   description: string | null;
-  eligibilityRules: {
-    summary?: string;
-    requirements?: string[];
-    deterministic?: Record<string, string | number | boolean>;
-  } | null;
+  eligibilityRules: EligibilityRules | null;
   clientApprovalRequired: boolean;
 };
 
