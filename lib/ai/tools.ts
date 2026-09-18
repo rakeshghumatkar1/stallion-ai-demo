@@ -350,7 +350,7 @@ export function makeTools(ctx: ToolContext): Record<string, Tool> {
 
     capture_lead: tool({
       description:
-        "Save the visitor's details as a lead. Help first, ask later. Call ONLY after you have actually helped, and only with details the visitor volunteered: name, company (org), email, mobile (phone) only if a callback was requested, visitor type, categories of interest, approximate entries, and a short summary (purpose).",
+        "Save the visitor's details as a lead. Help first, ask later. Call ONLY after the visitor has clearly agreed to event-team follow-up or explicitly asked to be contacted, and only after enough useful contact information has been collected. Save once rather than after every individual detail. Use only details the visitor volunteered: name, company (org), email, mobile (phone) only if a callback was requested, visitor type, categories of interest, approximate entries, and a short summary (purpose).",
       parameters: captureLeadInput,
       execute: async (input) => {
         const [row] = await db
@@ -377,7 +377,7 @@ export function makeTools(ctx: ToolContext): Record<string, Tool> {
 
     escalate_to_human: tool({
       description:
-        "Hand off to the team. Use for large, commercial (sponsorship/partnership), unusual, or unconfirmable enquiries, complaints, or a direct request for a person. Writes a handoff and notifies the team.",
+        "Hand off to the team. Use for large, commercial (sponsorship/partnership), unusual, or unconfirmable enquiries, complaints, or a direct request for a person — BUT only after the visitor has explicitly asked for human contact or clearly agreed when you offered a handoff. Do not notify the team silently. Writes a handoff and notifies the team.",
       parameters: escalateInput,
       execute: async ({ reason, summary }) => {
         const [row] = await db

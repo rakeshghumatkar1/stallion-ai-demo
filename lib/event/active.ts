@@ -1,33 +1,25 @@
 /**
  * The active event — the single source of event scope (server-only).
  *
- * This deployment serves exactly ONE event, pinned by ACTIVE_EVENT_ID (e.g.
- * "INDIA-2027"). India and UAE are separate deployments of this same codebase.
- * A visitor can never switch events: there is no request-derived event id
- * anywhere. Every content/conversation query in the chat path scopes to this
- * event's id (plus evergreen), so another event's data is never even queried.
- *
- * See CLAUDE.md → "Event isolation".
+ * This production demo is intentionally pinned to ONE UAE/Dubai knowledge base.
+ * The pin is application-owned, not request-derived and not controlled by the
+ * visitor or by a stale Vercel environment variable. India data may remain in
+ * storage for future projects, but this deployment cannot select it.
  */
 import "server-only";
 import { and, eq } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { events, type Event } from "@/lib/db/schema";
 
-/** The pinned event slug from server config. Throws if unset. */
+export const PINNED_EVENT_SLUG = "UAE-GMM-2026-TEST" as const;
+
 export function getActiveEventSlug(): string {
-  const slug = process.env.ACTIVE_EVENT_ID;
-  if (!slug) {
-    throw new Error(
-      "ACTIVE_EVENT_ID is not set. This deployment must be pinned to one event (e.g. INDIA-2027).",
-    );
-  }
-  return slug;
+  return PINNED_EVENT_SLUG;
 }
 
 /**
- * Load the active event row. Not cached, so admin edits to the event config are
- * reflected immediately; it's a single indexed lookup per request.
+ * Load the pinned UAE event row. Not cached, so approved content/config updates
+ * loaded at deploy time are reflected immediately.
  */
 export async function getActiveEvent(): Promise<Event> {
   const slug = getActiveEventSlug();
@@ -38,7 +30,7 @@ export async function getActiveEvent(): Promise<Event> {
     .limit(1);
   if (!row) {
     throw new Error(
-      `No active event found for ACTIVE_EVENT_ID=${slug}. Seed the event or check the slug.`,
+      `No active event found for pinned production event ${slug}. Load the UAE content package.`,
     );
   }
   return row;

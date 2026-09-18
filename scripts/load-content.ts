@@ -10,7 +10,7 @@
  * updates in place and re-embeds. Categories and forms are matched by name;
  * ones missing from config.json are deactivated (retired), never deleted.
  *
- * Run with: npm run content:load [-- --event UAE-2026] [-- --evergreen-only]
+ * Run with: npm run content:load [-- --event UAE-2026] [-- --evergreen-only] [-- --event-only]
  */
 import "dotenv/config";
 import fs from "node:fs";
@@ -328,11 +328,17 @@ export async function loadEdition(slug: string): Promise<void> {
 export interface LoadContentOptions {
   event?: string | null;
   evergreenOnly?: boolean;
+  /** Production demo mode: load ONLY the selected event KB, never evergreen. */
+  eventOnly?: boolean;
 }
 
 export async function loadContent(opts: LoadContentOptions = {}): Promise<void> {
-  const n = await loadEvergreen();
-  console.log(`[content] ${n} evergreen documents`);
+  if (!opts.eventOnly) {
+    const n = await loadEvergreen();
+    console.log(`[content] ${n} evergreen documents`);
+  } else {
+    console.log("[content] event-only mode: evergreen knowledge skipped");
+  }
   if (opts.evergreenOnly) return;
   const slug = opts.event ?? process.env.ACTIVE_EVENT_ID;
   if (!slug) throw new Error("No edition given: pass --event <ID> or set ACTIVE_EVENT_ID.");
@@ -344,6 +350,7 @@ function parseArgs(argv: string[]): LoadContentOptions {
   for (let i = 0; i < argv.length; i++) {
     if (argv[i] === "--event") opts.event = argv[++i] ?? null;
     else if (argv[i] === "--evergreen-only") opts.evergreenOnly = true;
+    else if (argv[i] === "--event-only") opts.eventOnly = true;
   }
   return opts;
 }

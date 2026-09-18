@@ -159,10 +159,12 @@ describe("behaviour prompt slot (File 04)", () => {
     expect(prompt).toContain("THIS EVENT");
   });
 
-  it("falls back to the inline rules when the slot file is only comments", () => {
-    // behaviourOverride undefined → loads lib/ai/behaviour-prompt.md (comments only)
+  it("loads the production sales behaviour prompt from the File 04 slot", () => {
     const prompt = buildSystemPrompt({ event: makeEvent(), context: [] });
-    expect(prompt).toContain("# KNOWLEDGE RULES");
+    expect(prompt).toMatch(/virtual event sales assistant/i);
+    expect(prompt).toMatch(/never allow a dead end/i);
+    expect(prompt).toMatch(/closed-world knowledge rule/i);
+    expect(prompt).toContain("ANSWER STATE PROTOCOL");
   });
 });
 

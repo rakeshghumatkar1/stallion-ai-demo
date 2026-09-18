@@ -2,10 +2,10 @@
   "name": "stallion-ai-assistant",
   "version": "0.1.0",
   "private": true,
-  "description": "Grounded, safe event and nomination assistant for Digital Stallion award sites (India + UAE).",
+  "description": "Grounded, safe UAE event and nomination assistant for Digital Stallion.",
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "tsx --tsconfig scripts/tsconfig.json scripts/load-production-content.ts && next build",
     "start": "next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
@@ -16,7 +16,8 @@
     "db:push": "drizzle-kit push",
     "seed": "tsx --tsconfig scripts/tsconfig.json scripts/seed.ts",
     "content:load": "tsx --tsconfig scripts/tsconfig.json scripts/load-content.ts",
-    "questions": "tsx --tsconfig scripts/tsconfig.json scripts/run-questions.ts"
+    "questions": "tsx --tsconfig scripts/tsconfig.json scripts/run-questions.ts",
+    "build:verified": "vitest run && npm run build"
   },
   "dependencies": {
     "@ai-sdk/openai": "^1.3.24",

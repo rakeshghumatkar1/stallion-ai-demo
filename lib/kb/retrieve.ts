@@ -3,13 +3,13 @@
  *
  * The filter enforced here IS the safety boundary. On every read the model can
  * reach, retrieval only returns chunks whose document is:
- *   (event_id = ACTIVE_EVENT_ID OR scope = 'evergreen')
+ *   event_id = the single pinned production event
  *   AND active = true
  *   AND approval_status = 'approved'
  *   AND (effective_date IS NULL OR effective_date <= now)
  *   AND (expiry_date  IS NULL OR expiry_date  >= now)
  *
- * There is no code path here that can return another event's content, draft
+ * There is no code path here that can return another event's content, evergreen content, draft
  * content, inactive content, or out-of-date content. This is core to isolation.
  */
 import "server-only";
@@ -52,8 +52,10 @@ export async function retrieve(opts: RetrieveOptions): Promise<RetrievedChunk[]>
     .innerJoin(kbDocuments, eq(kbChunks.documentId, kbDocuments.id))
     .where(
       and(
-        // Event isolation: this event OR evergreen. Nothing else.
-        or(eq(kbDocuments.eventId, eventId), eq(kbDocuments.scope, "evergreen")),
+        // Single-KB production demo: exact pinned UAE event only.
+        // Evergreen and all other event documents are deliberately unreachable.
+        eq(kbDocuments.eventId, eventId),
+        eq(kbDocuments.scope, "event"),
         // Approved, active, in-date only.
         eq(kbDocuments.active, true),
         eq(kbDocuments.approvalStatus, "approved"),

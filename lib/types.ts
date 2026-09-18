@@ -64,7 +64,7 @@ export const PRODUCT_IDENTITY_EN = {
   name: "Stallion AI Assistant",
   /** The public greeting; may be adapted to the event. */
   greeting:
-    "Hi, I'm Stallion AI Assistant. I can help with event information, participation, nominations and finding potentially relevant categories.",
+    "Hi, I'm Stallion AI Assistant. I can help you understand the event, find the categories that may fit your work, and get your nomination started. What would you like to explore?",
 } as const;
 
 /**
@@ -119,10 +119,22 @@ export interface QuickAction {
 }
 
 export const QUICK_ACTIONS: QuickAction[] = [
-  { label: "Explore the event", send: "Tell me about this event." },
-  { label: "I represent a brand", send: "I represent a brand." },
-  { label: "I represent an agency", send: "I represent an agency." },
-  { label: "Individual nomination", send: "I'm nominating as an individual." },
-  { label: "Sponsorship or partnership", send: "I'm interested in sponsorship or partnership." },
-  { label: "Speak with the team", send: "I'd like to speak with the team." },
+  { label: "About the event", send: "Tell me about this event and who it is for." },
+  {
+    label: "Find my categories",
+    send: "Help me find the most relevant award categories for my work.",
+  },
+  {
+    label: "Start a nomination",
+    send: "I'm interested in participating. Help me start a nomination.",
+  },
+  {
+    label: "Agency / multiple entries",
+    send: "I represent an agency and may have multiple entries or clients.",
+  },
+  {
+    label: "Sponsorship / partnership",
+    send: "I'm interested in sponsorship or partnership opportunities.",
+  },
+  { label: "Speak with the team", send: "I'd like to speak with the team about participating." },
 ];
