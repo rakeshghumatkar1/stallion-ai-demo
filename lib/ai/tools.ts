@@ -14,18 +14,15 @@
 import "server-only";
 import { tool, type Tool } from "ai";
 import { z } from "zod";
-import { and, eq, isNull } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { db } from "@/lib/db";
 import {
-  categories,
   conversations,
-  forms,
   handoffs,
   leads,
   unansweredQuestions,
 } from "@/lib/db/schema";
 import type { Event, EventAnnouncement } from "@/lib/db/schema";
-import { embedMany } from "@/lib/kb/embed";
 import { notifyHandoff } from "@/lib/handoff/notify";
 import { FACT_FIELDS, VISITOR_TYPES } from "@/lib/types";
 import { UAE_CATEGORIES, rankUaeCategories } from "@/lib/demo/uae-knowledge";
@@ -177,20 +174,6 @@ export function resolveFacts(event: Event, fields: FactField[], now: Date = new 
     const confirmed = value !== null && value !== "";
     return { field, confirmed, value: confirmed ? value : null };
   });
-}
-
-/** Cosine similarity for two equal-length vectors. */
-function cosine(a: number[], b: number[]): number {
-  let dot = 0;
-  let na = 0;
-  let nb = 0;
-  for (let i = 0; i < a.length; i++) {
-    dot += a[i]! * b[i]!;
-    na += a[i]! * a[i]!;
-    nb += b[i]! * b[i]!;
-  }
-  const denom = Math.sqrt(na) * Math.sqrt(nb);
-  return denom === 0 ? 0 : dot / denom;
 }
 
 // ---- Zod input schemas ------------------------------------------------------
