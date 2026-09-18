@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* The widget fills its iframe; the demo/admin pages use normal document flow. */
+html,
+body {
+  height: 100%;
+}
