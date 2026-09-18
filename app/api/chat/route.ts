@@ -66,7 +66,7 @@ function textFromParts(parts: IncomingMessage["parts"]): string {
  * Convert the client's UI messages into what the model sees. Every visitor
  * turn is wrapped as data; assistant turns keep completed tool invocations so
  * multi-turn tool context survives, and empty assistant turns are dropped
- * (Anthropic rejects empty text blocks).
+ * (providers reject empty assistant text blocks).
  */
 function toModelMessages(incoming: IncomingMessage[]): ModelMessage[] {
   const out: ModelMessage[] = [];

@@ -122,10 +122,13 @@ reads or edits the pinned event's rows (plus evergreen KB).
 - **Tailwind CSS 3** — widget + admin UI.
 - **Postgres + pgvector** (Neon by default) — content and vector store.
 - **Drizzle ORM 0.38 + drizzle-kit** — schema (`lib/db/schema.ts`), migrations (`drizzle/`).
-- **Vercel AI SDK v4 (`ai`) + `@ai-sdk/anthropic`** — streaming + tool calling.
-  Client uses `@ai-sdk/react` `useChat`.
-- **OpenAI SDK** — embeddings behind a provider wrapper (`lib/kb/embed.ts`,
-  swappable via `EMBEDDINGS_PROVIDER`).
+- **Vercel AI SDK v4 (`ai`) + `@ai-sdk/openai`** — streaming + tool calling
+  through the OpenAI Responses API (`lib/ai/model.ts`; model chosen by
+  `MODEL_ID`, default `gpt-5.6-terra`, the balanced tier). Client uses
+  `@ai-sdk/react` `useChat`.
+- **OpenAI SDK** — embeddings (`text-embedding-3-small`, 1536) behind a provider
+  wrapper (`lib/kb/embed.ts`, swappable via `EMBEDDINGS_PROVIDER`).
+- **One provider, one key.** `OPENAI_API_KEY` serves both chat and embeddings.
 - **Vitest** — tests in `tests/` must never need a DB, network, or API keys.
 - **Zod** — validates every tool input, request body, and admin form.
 - **Resend** — handoff email (console fallback in dev).

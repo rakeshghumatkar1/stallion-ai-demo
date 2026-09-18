@@ -149,7 +149,7 @@ Dependencies are **already installed** (`node_modules` present, 484 packages).
 | `next` | 15.5.25 | App Router, TypeScript, ESLint, **no `src/`** |
 | `react` / `react-dom` | 19.x | |
 | `ai` (Vercel AI SDK) | **4.3.19** | **v4 API** — `tool({ parameters, execute })`, `streamText`, `result.toDataStreamResponse()` |
-| `@ai-sdk/anthropic` | 1.2.12 | `createAnthropic({ apiKey })(modelId)` |
+| `@ai-sdk/openai` | 1.3.24 | `createOpenAI({ apiKey }).responses(modelId)` — single provider for chat + embeddings |
 | `@ai-sdk/react` | 1.2.12 | `useChat` for the widget |
 | `drizzle-orm` | 0.38.4 | pgvector `vector()`, `cosineDistance`, `.using("hnsw", col.op("vector_cosine_ops"))` |
 | `drizzle-kit` | 0.30.6 | `generate` (offline) / `push` |
@@ -306,9 +306,9 @@ retrieve({ eventId, query, limit=6, minScore=0.2 }): Promise<RetrievedChunk[]>
 hasRelevant(chunks): boolean
 
 // lib/ai/model.ts
-DEFAULT_MODEL_ID: string                            // "claude-sonnet-4-5"
+DEFAULT_MODEL_ID: string                            // "gpt-5.6-terra"
 getModelId(): string                                // MODEL_ID ?? default
-getModel(): LanguageModelV1                          // Anthropic via AI SDK
+getModel(): LanguageModelV1                          // OpenAI (Responses API) via AI SDK
 
 // lib/ai/guardrails.ts
 NO_CONFIRMED_INFO: string
@@ -345,8 +345,7 @@ currently stale):
 
 ```
 DATABASE_URL          Postgres connection string, pgvector enabled (Neon default)
-ANTHROPIC_API_KEY     conversation model
-MODEL_ID              current Claude Sonnet model id (default claude-sonnet-4-5)
+MODEL_ID              OpenAI chat model id (default gpt-5.6-terra); OPENAI_API_KEY serves chat + embeddings
 EMBEDDINGS_PROVIDER   openai
 OPENAI_API_KEY        embeddings
 EMBEDDING_DIM         1536
@@ -560,7 +559,7 @@ Written from API knowledge; confirm with the compiler:
   `streamText({ tools })` wants a `ToolSet`. Likely assignable — if not, use
   `satisfies ToolSet` / adjust the return type.
 - **`LanguageModelV1`** import from `"ai"` in `lib/ai/model.ts` — confirm exported
-  in 4.3.19; fallback `ReturnType<ReturnType<typeof createAnthropic>>`.
+  in 4.3.19; fallback `ReturnType<ReturnType<typeof createOpenAI>>`.
 - **Drizzle pgvector** `.using("hnsw", table.embedding.op("vector_cosine_ops"))`
   and `cosineDistance` import — confirm in 0.38.4.
 - **`import "server-only"`** resolves (ships with Next).
@@ -591,7 +590,7 @@ Written from API knowledge; confirm with the compiler:
 
 ```bash
 npm install --ignore-scripts          # see sandbox note (§5)
-cp .env.example .env                   # fill DATABASE_URL, ANTHROPIC_API_KEY,
+cp .env.example .env                   # fill DATABASE_URL,
                                        # OPENAI_API_KEY, MODEL_ID,
                                        # ACTIVE_EVENT_ID=INDIA-2027, admin, handoff
 npm run db:generate                    # emit first migration from schema (offline)

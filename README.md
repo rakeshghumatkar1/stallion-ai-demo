@@ -17,8 +17,9 @@ Fill in `.env`:
 | Variable | Purpose |
 | --- | --- |
 | `DATABASE_URL` | Postgres with pgvector (Neon works out of the box) |
-| `ANTHROPIC_API_KEY`, `MODEL_ID` | Conversation model |
-| `OPENAI_API_KEY`, `EMBEDDINGS_PROVIDER`, `EMBEDDING_DIM` | Embeddings for the knowledge base |
+| `OPENAI_API_KEY` | The single provider key: chat model and embeddings |
+| `MODEL_ID` | OpenAI chat model, Responses API (default `gpt-5.6-terra`, the balanced tier) |
+| `EMBEDDINGS_PROVIDER`, `EMBEDDING_DIM` | Embeddings (`openai`, `text-embedding-3-small`, 1536) |
 | `ACTIVE_EVENT_ID` | The ONE event this deployment serves, e.g. `INDIA-2027` |
 | `ADMIN_EMAIL`, `ADMIN_PASSWORD`, `ADMIN_SESSION_SECRET` | Admin login |
 | `HANDOFF_CHANNEL`, `HANDOFF_EMAIL`, `RESEND_API_KEY` | Team notification on handoff |

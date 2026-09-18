@@ -10,6 +10,7 @@
  * Run with: npm run seed   (needs DATABASE_URL + OPENAI_API_KEY for embeddings)
  */
 import "dotenv/config";
+import { pathToFileURL } from "node:url";
 import { and, eq, inArray, or } from "drizzle-orm";
 import { closeDb, db } from "@/lib/db";
 import { categories, events, forms, kbDocuments } from "@/lib/db/schema";
@@ -146,7 +147,8 @@ Nominations are submitted through the general nomination form. Agencies entering
   },
 ];
 
-async function main() {
+/** Seed (or re-seed) the sample event. Exported so harnesses can call it in-process. */
+export async function seed() {
   console.log(`[seed] seeding sample event ${SLUG}…`);
 
   // 1. Upsert the event row (typed fact columns).
@@ -203,9 +205,13 @@ async function main() {
   console.log(`[seed] done. ACTIVE_EVENT_ID=${SLUG} (event id ${event.id}).`);
 }
 
-main()
-  .catch((err) => {
-    console.error("[seed] failed:", err);
-    process.exitCode = 1;
-  })
-  .finally(() => closeDb());
+// Auto-run only when executed directly (`npm run seed`), not when imported.
+const isDirectRun = process.argv[1] ? pathToFileURL(process.argv[1]).href === import.meta.url : false;
+if (isDirectRun) {
+  seed()
+    .catch((err) => {
+      console.error("[seed] failed:", err);
+      process.exitCode = 1;
+    })
+    .finally(() => closeDb());
+}

@@ -31,7 +31,7 @@ const INJECTION_PATTERNS: { label: string; re: RegExp }[] = [
   { label: "reveal-prompt", re: /\b(reveal|show|print|repeat|output)\b[^.]*\b(prompt|instructions?|system)\b/i },
   { label: "role-override", re: /\b(you are now|act as|pretend (to be|you are)|new persona|jailbreak)\b/i },
   { label: "impersonate-founder", re: /\b(pretend|act|speak|respond)\b[^.]*\bfounder\b/i },
-  { label: "authority-claim", re: /\b(as (the )?(admin|administrator|owner|anthropic|system)|i am (the )?(admin|owner|founder))\b/i },
+  { label: "authority-claim", re: /\b(as (the )?(admin|administrator|owner|openai|developer|system)|i am (the )?(admin|owner|founder))\b/i },
 ];
 
 export interface InjectionResult {
