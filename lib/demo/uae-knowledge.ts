@@ -27,6 +27,8 @@ export const UAE_EVENT = {
   contact: {
     team: "Digital Stallions Forum UAE",
     email: "paurush.sonkar@icloud.com",
+    phone: null,
+    whatsapp: null,
     website: "https://thegreatmarketingminds.ae/",
   },
   sponsors: null,
