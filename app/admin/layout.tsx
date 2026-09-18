@@ -2,6 +2,7 @@ import Link from "next/link";
 import { cookies } from "next/headers";
 import { getAdminSession } from "@/lib/auth";
 import { logoutAction } from "./actions";
+import { getActiveEventSlug } from "@/lib/event/active";
 import { LoginForm } from "./login-form";
 
 /**
@@ -37,7 +38,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
           <div className="font-semibold">
             Stallion Admin{" "}
             <span className="ml-1 rounded bg-slate-100 px-1.5 py-0.5 text-xs font-normal text-slate-600">
-              {process.env.ACTIVE_EVENT_ID ?? "no event pinned"}
+              {getActiveEventSlug()}
             </span>
           </div>
           <nav className="flex flex-wrap gap-4 text-sm">

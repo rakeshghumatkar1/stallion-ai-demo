@@ -28,6 +28,7 @@ import type { Event, EventAnnouncement } from "@/lib/db/schema";
 import { embedMany } from "@/lib/kb/embed";
 import { notifyHandoff } from "@/lib/handoff/notify";
 import { FACT_FIELDS, VISITOR_TYPES } from "@/lib/types";
+import { UAE_CATEGORIES, rankUaeCategories } from "@/lib/demo/uae-knowledge";
 import type { FactField, ResolvedFact, ToolContext } from "@/lib/types";
 
 // ---- Pure fact resolution (testable, no DB/network) -------------------------
@@ -259,93 +260,33 @@ export function makeTools(ctx: ToolContext): Record<string, Tool> {
     }),
 
     list_categories: tool({
-      description: "List the active award categories for THIS event.",
+      description: "List the approved UAE award category templates available to explore in this demo.",
       parameters: z.object({}),
-      execute: async () => {
-        const rows = await db
-          .select({
-            name: categories.name,
-            officialName: categories.officialName,
-            description: categories.description,
-            eligibilityRules: categories.eligibilityRules,
-            clientApprovalRequired: categories.clientApprovalRequired,
-          })
-          .from(categories)
-          .where(and(eq(categories.eventId, ctx.eventId), eq(categories.active, true)));
-        return { eventId: ctx.eventId, categories: rows };
-      },
+      execute: async () => ({
+        eventId: ctx.eventId,
+        categories: UAE_CATEGORIES,
+        note: "These are UAE category templates captured from the approved source. Current-edition wording and availability remain subject to organiser confirmation.",
+      }),
     }),
 
     suggest_categories: tool({
       description:
-        "Suggest award categories that MAY fit what the visitor described (semantic match). Always framed as options, never a verdict. Only assert eligibility when a category's deterministic eligibility rule confirms it.",
+        "Suggest UAE award categories that MAY fit what the visitor described. Always frame them as potentially relevant, never as guaranteed eligibility.",
       parameters: suggestCategoriesInput,
-      execute: async ({ description }) => {
-        const rows = await db
-          .select({
-            name: categories.name,
-            officialName: categories.officialName,
-            description: categories.description,
-            eligibilityRules: categories.eligibilityRules,
-            clientApprovalRequired: categories.clientApprovalRequired,
-          })
-          .from(categories)
-          .where(and(eq(categories.eventId, ctx.eventId), eq(categories.active, true)));
-
-        if (rows.length === 0) {
-          return { suggestions: [], disclaimer: SUGGESTION_DISCLAIMER };
-        }
-
-        // Semantic ranking over category text. Falls back to unranked if
-        // embeddings are unavailable.
-        let ranked = rows.map((r) => ({ ...r, score: 0 }));
-        try {
-          const texts = rows.map((r) => `${r.name}. ${r.description ?? ""}`);
-          const [queryVec, ...catVecs] = await embedMany([description, ...texts]);
-          ranked = rows
-            .map((r, i) => ({ ...r, score: cosine(queryVec!, catVecs[i]!) }))
-            .sort((a, b) => b.score - a.score);
-        } catch {
-          // keep unranked fallback
-        }
-
-        return { suggestions: ranked.slice(0, 3), disclaimer: SUGGESTION_DISCLAIMER };
-      },
+      execute: async ({ description }) => ({
+        suggestions: rankUaeCategories(description, 3),
+        disclaimer: SUGGESTION_DISCLAIMER,
+      }),
     }),
 
     get_form: tool({
-      description: "Get the approved, active nomination form URL for THIS event (optionally for a category).",
+      description:
+        "Return the approved current UAE nomination form only when one exists. This demo has no confirmed current form URL, so never invent one.",
       parameters: getFormInput,
-      execute: async ({ category }) => {
-        if (category) {
-          const [byCat] = await db
-            .select({ name: forms.name, url: forms.url })
-            .from(forms)
-            .innerJoin(categories, eq(forms.categoryId, categories.id))
-            .where(
-              and(
-                eq(forms.eventId, ctx.eventId),
-                eq(forms.active, true),
-                eq(categories.name, category),
-              ),
-            )
-            .limit(1);
-          if (byCat) return { form: byCat };
-        }
-        const [general] = await db
-          .select({ name: forms.name, url: forms.url })
-          .from(forms)
-          .where(and(eq(forms.eventId, ctx.eventId), eq(forms.active, true), isNull(forms.categoryId)))
-          .limit(1);
-        if (general) return { form: general };
-
-        const [any] = await db
-          .select({ name: forms.name, url: forms.url })
-          .from(forms)
-          .where(and(eq(forms.eventId, ctx.eventId), eq(forms.active, true)))
-          .limit(1);
-        return { form: any ?? null };
-      },
+      execute: async () => ({
+        form: null,
+        note: "No approved current UAE nomination form URL is confirmed in the demo knowledge. Offer team follow-up instead.",
+      }),
     }),
 
     capture_lead: tool({

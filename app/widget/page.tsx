@@ -187,8 +187,8 @@ export default function WidgetPage() {
           <div className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-brand bg-white p-1 shadow-sm">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/brand/mark-2026.jpg"
-              alt="Digital Stallions Forum"
+              src="/brand/dsf-middle-east.svg"
+              alt="Digital Stallions Forum Middle East"
               className="h-full w-full object-contain"
             />
           </div>

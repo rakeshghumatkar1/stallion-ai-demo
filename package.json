@@ -2,10 +2,10 @@
   "name": "stallion-ai-assistant",
   "version": "0.1.0",
   "private": true,
-  "description": "Grounded, safe UAE event and nomination assistant for Digital Stallion.",
+  "description": "Grounded UAE/Dubai event and nomination assistant for Digital Stallion.",
   "scripts": {
     "dev": "next dev",
-    "build": "tsx --tsconfig scripts/tsconfig.json scripts/load-production-content.ts && next build",
+    "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",

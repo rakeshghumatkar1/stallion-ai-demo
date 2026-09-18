@@ -1,10 +1,7 @@
 import Script from "next/script";
 import Link from "next/link";
-import { and, asc, eq } from "drizzle-orm";
-import { db } from "@/lib/db";
-import { categories, type Event } from "@/lib/db/schema";
-import { getActiveEvent, getActiveEventSlug } from "@/lib/event/active";
-import { resolveFacts } from "@/lib/ai/tools";
+import { getActiveEventSlug } from "@/lib/event/active";
+import { UAE_EVENT, UAE_CATEGORIES } from "@/lib/demo/uae-knowledge";
 import { PRODUCT_IDENTITY_EN } from "@/lib/types";
 import { LaunchButton } from "./launch-button";
 
@@ -24,25 +21,17 @@ function ordinal(n: number): string {
   return `${n}${s[(v - 20) % 10] ?? s[v] ?? s[0]}`;
 }
 
-async function loadPageData() {
-  let event: Event | null = null;
-  try {
-    event = await getActiveEvent();
-  } catch {
-    return { event: null, facts: [], cats: [] };
-  }
-  const facts = resolveFacts(event, ["event_date", "venue", "nomination_deadline", "eligibility_period"]);
-  let cats: Array<{ name: string; officialName: string | null; description: string | null }> = [];
-  try {
-    cats = await db
-      .select({ name: categories.name, officialName: categories.officialName, description: categories.description })
-      .from(categories)
-      .where(and(eq(categories.eventId, event.id), eq(categories.active, true)))
-      .orderBy(asc(categories.name));
-  } catch {
-    cats = [];
-  }
-  return { event, facts, cats };
+function loadPageData() {
+  return {
+    event: UAE_EVENT,
+    facts: [
+      { field: "event_date", confirmed: false, value: null },
+      { field: "venue", confirmed: false, value: null },
+      { field: "nomination_deadline", confirmed: false, value: null },
+      { field: "eligibility_period", confirmed: false, value: null },
+    ],
+    cats: UAE_CATEGORIES,
+  };
 }
 
 const FACT_LABELS: Record<string, string> = {
@@ -61,10 +50,7 @@ export default async function DemoPage() {
   const slug = getActiveEventSlug();
   const { event, facts, cats } = await loadPageData();
 
-  const country = event?.country === "IN" ? "India" : event?.country === "AE" ? "UAE" : event?.country;
-  const eyebrow = event
-    ? [event.editionNumber ? `${ordinal(event.editionNumber)} edition` : null, country, String(event.year)].filter(Boolean).join("  ·  ")
-    : slug;
+  const eyebrow = event ? `${ordinal(event.editionNumber)} edition  ·  Dubai, UAE` : slug;
   const title = event?.name ?? "Digital Stallions Forum";
   const contact = event?.contact ?? null;
 
@@ -76,7 +62,7 @@ export default async function DemoPage() {
           <a href="#top" className="flex items-center gap-3">
             <span className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-md bg-white p-1">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/brand/forum-logo.jpg" alt="Digital Stallions Forum" className="h-full w-full object-contain" />
+              <img src="/brand/dsf-middle-east.svg" alt="Digital Stallions Forum" className="h-full w-full object-contain" />
             </span>
             <span className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-300">Digital Stallions Forum</span>
           </a>
@@ -104,8 +90,7 @@ export default async function DemoPage() {
               {title}
             </h1>
             <p className="mt-6 max-w-xl text-lg leading-relaxed text-slate-400">
-              Recognising the brands, agencies and leaders shaping marketing and business. Explore the event, find the
-              categories that may fit your work, and start your nomination — with the organising team one step away.
+              Recognising marketing, digital and business achievement across the UAE. Explore the event, discover the categories that may fit your work, and move towards nomination with the organising team one step away.
             </p>
             <div className="mt-9 flex flex-wrap items-center gap-5">
               <LaunchButton className={primaryBtn}>Start a conversation</LaunchButton>
@@ -120,18 +105,14 @@ export default async function DemoPage() {
           </div>
 
           <div className="space-y-6">
-            {/* Full 792×570 badge (the 150×150 crop cut the tiger). Shift by the
-                23px / 19px black letterbox so only the artwork shows. */}
-            <div className="rounded-lg border border-brand-primary/30 bg-white p-5 sm:p-8">
-              <div className="overflow-hidden">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src="/brand/stallion-badge.jpg"
-                  alt={title}
-                  className="block h-auto max-w-none"
-                  style={{ width: "105.6%", marginLeft: "-3.07%" }}
-                />
-              </div>
+            {/* Middle East / UAE brand identity from the organiser-provided Drive assets. */}
+            <div className="rounded-lg border border-brand-primary/30 bg-white p-6 sm:p-10">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/brand/dsf-middle-east.svg"
+                alt="Digital Stallions Forum Middle East"
+                className="mx-auto block h-auto w-full max-w-md object-contain"
+              />
             </div>
             <dl className="divide-y divide-white/10 rounded-lg border border-white/10 bg-white/[0.03]">
               {facts.map((f) => (
@@ -193,7 +174,7 @@ export default async function DemoPage() {
               <div className="max-w-2xl">
                 <p className="text-xs font-semibold uppercase tracking-[0.28em] text-brand-primary">Award categories</p>
                 <h2 className="mt-4 font-display text-3xl font-semibold text-white sm:text-4xl">
-                  {cats.length ? `${cats.length} categories open for nomination` : "Categories"}
+                  {cats.length ? `${cats.length} UAE award categories to explore` : "UAE award categories"}
                 </h2>
               </div>
               <LaunchButton className={outlineBtn}>Help me choose a category</LaunchButton>
@@ -212,7 +193,7 @@ export default async function DemoPage() {
                 ))}
               </ul>
             ) : (
-              <p className="mt-12 text-sm italic text-slate-500">The category list will appear once the event is configured.</p>
+              <p className="mt-12 text-sm italic text-slate-500">The UAE category catalogue is being prepared.</p>
             )}
             <p className="mt-8 text-xs text-slate-500">
               Category suggestions from the assistant are advisory. Eligibility and final placement are decided by the awards

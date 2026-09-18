@@ -20,8 +20,8 @@ const playfair = Playfair_Display({
 
 export const metadata: Metadata = {
   title: "Stallion AI Assistant",
-  description: "AI chatbot by Digital Stallion for award event and nomination enquiries.",
-  icons: { icon: "/brand/mark-2026.jpg" },
+  description: "AI chatbot by Digital Stallion for The Great Marketing & Business Minds UAE.",
+  icons: { icon: "/brand/dsf-middle-east.svg" },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
