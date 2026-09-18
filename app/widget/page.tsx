@@ -9,23 +9,42 @@
  */
 import { useChat } from "@ai-sdk/react";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { PRODUCT_IDENTITY_EN, QUICK_ACTIONS } from "@/lib/types";
+import { PRODUCT_IDENTITY_EN, QUICK_ACTIONS, type QuickAction } from "@/lib/types";
 import { parseMarkdownLite, type Inline } from "@/lib/markdown-lite";
 
 // UI strings as data so a second language can be added by translation only.
-// Product identity (File 01 §12) is shared with the system prompt.
+// Product identity is shared with the system prompt.
 const UI_EN = {
   title: PRODUCT_IDENTITY_EN.name,
+  subtitle: "AI Chatbot by Digital Stallion",
   disclosure:
-    "You're chatting with an AI assistant. It shares only confirmed event information and can connect you with the team for anything else.",
+    "You're chatting with an AI assistant using organiser-approved event information. It can help you explore categories, start a nomination, or connect you with the team.",
   welcome: PRODUCT_IDENTITY_EN.greeting,
   placeholder: "Ask about the event, categories, or how to nominate…",
   send: "Send",
   thinking: "Checking…",
-  error: "Something went wrong. Please try again, or ask to speak with the team.",
+  error: "Something went wrong. Restart the conversation to return to the main menu.",
   you: "You",
   assistant: "Assistant",
+  restart: "Restart",
+  restartMenu: "Restart / main menu",
+  nextStep: "Next step",
 };
+
+const CONTINUE_ACTIONS: QuickAction[] = [
+  {
+    label: "Find categories",
+    send: "Help me find the most relevant categories for my work.",
+  },
+  {
+    label: "Start nomination",
+    send: "I'm interested in participating. Help me take the next step toward nomination.",
+  },
+  {
+    label: "Talk to the team",
+    send: "I'd like to speak with the team about participating.",
+  },
+];
 
 function newConversationId(): string {
   if (typeof crypto !== "undefined" && "randomUUID" in crypto) return crypto.randomUUID();
@@ -34,6 +53,12 @@ function newConversationId(): string {
     const r = (Math.random() * 16) | 0;
     return (c === "x" ? r : (r & 0x3) | 0x8).toString(16);
   });
+}
+
+function restartConversation(): void {
+  // A full reload guarantees both UI state and the conversation id are reset.
+  // It is intentionally deterministic and does not depend on model behaviour.
+  window.location.reload();
 }
 
 function Inlines({ inlines }: { inlines: Inline[] }) {
@@ -111,6 +136,32 @@ function RichText({ text }: { text: string }) {
   );
 }
 
+function ActionChips({
+  actions,
+  disabled,
+  onAction,
+}: {
+  actions: QuickAction[];
+  disabled: boolean;
+  onAction: (send: string) => void;
+}) {
+  return (
+    <div className="flex flex-wrap gap-2">
+      {actions.map((qa) => (
+        <button
+          key={qa.label}
+          type="button"
+          disabled={disabled}
+          onClick={() => onAction(qa.send)}
+          className="rounded-full border border-brand-primary bg-white px-3 py-1.5 text-xs font-medium text-brand-fg shadow-sm transition hover:bg-brand-primary hover:text-brand-fg disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          {qa.label}
+        </button>
+      ))}
+    </div>
+  );
+}
+
 export default function WidgetPage() {
   const [conversationId] = useState(newConversationId);
   const { messages, input, handleInputChange, handleSubmit, append, status, error } = useChat({
@@ -126,23 +177,33 @@ export default function WidgetPage() {
 
   const lastMessage = messages[messages.length - 1];
   const showThinking = isBusy && (!lastMessage || lastMessage.role !== "assistant" || !lastMessage.content);
+  const showNextActions =
+    !isBusy && !error && messages.length > 0 && lastMessage?.role === "assistant" && Boolean(lastMessage.content);
 
   return (
     <div className="flex h-full min-h-screen flex-col bg-white text-brand-fg">
-      <header className="flex items-center gap-3 bg-brand-dark px-4 py-3">
-        {/* White rounded tile — the brand mark is a white-background JPG, so it
-            never sits flat on the black header. */}
-        <div className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-brand bg-white p-1 shadow-sm">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/brand/mark-2026.jpg"
-            alt="The Great Marketing &amp; Business Minds UAE 2026"
-            className="h-full w-full object-contain"
-          />
+      <header className="flex items-center justify-between gap-3 bg-brand-dark px-4 py-3">
+        <div className="flex min-w-0 items-center gap-3">
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-brand bg-white p-1 shadow-sm">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/brand/mark-2026.jpg"
+              alt="Digital Stallions Forum"
+              className="h-full w-full object-contain"
+            />
+          </div>
+          <div className="min-w-0">
+            <div className="truncate text-sm font-semibold leading-tight text-brand-primary">{UI_EN.title}</div>
+            <div className="truncate text-[10px] leading-tight text-slate-400">{UI_EN.subtitle}</div>
+          </div>
         </div>
-        <div className="min-w-0">
-          <div className="truncate text-sm font-semibold leading-tight text-brand-primary">{UI_EN.title}</div>
-        </div>
+        <button
+          type="button"
+          onClick={restartConversation}
+          className="shrink-0 rounded-full border border-white/20 px-2.5 py-1 text-[10px] font-medium text-slate-300 transition hover:border-brand-primary hover:text-brand-primary"
+        >
+          {UI_EN.restart}
+        </button>
       </header>
 
       <p className="border-b border-slate-200 bg-white px-4 py-2 text-[11px] leading-snug text-slate-500">
@@ -156,18 +217,12 @@ export default function WidgetPage() {
           </Bubble>
 
           {messages.length === 0 && (
-            <div className="flex flex-wrap gap-2 pt-1">
-              {QUICK_ACTIONS.map((qa) => (
-                <button
-                  key={qa.label}
-                  type="button"
-                  disabled={isBusy}
-                  onClick={() => append({ role: "user", content: qa.send })}
-                  className="rounded-full border border-brand-primary bg-white px-3 py-1.5 text-xs font-medium text-brand-fg shadow-sm transition hover:bg-brand-primary hover:text-brand-fg disabled:cursor-not-allowed disabled:opacity-50"
-                >
-                  {qa.label}
-                </button>
-              ))}
+            <div className="pt-1">
+              <ActionChips
+                actions={QUICK_ACTIONS}
+                disabled={isBusy}
+                onAction={(send) => append({ role: "user", content: send })}
+              />
             </div>
           )}
 
@@ -187,7 +242,31 @@ export default function WidgetPage() {
             </Bubble>
           )}
 
-          {error && <p className="text-xs text-red-600">{UI_EN.error}</p>}
+          {showNextActions && (
+            <div className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-3">
+              <p className="mb-2 text-[10px] font-semibold uppercase tracking-wider text-slate-400">
+                {UI_EN.nextStep}
+              </p>
+              <ActionChips
+                actions={CONTINUE_ACTIONS}
+                disabled={isBusy}
+                onAction={(send) => append({ role: "user", content: send })}
+              />
+            </div>
+          )}
+
+          {error && (
+            <div className="rounded-xl border border-red-200 bg-red-50 px-3 py-3">
+              <p className="text-xs leading-relaxed text-red-700">{UI_EN.error}</p>
+              <button
+                type="button"
+                onClick={restartConversation}
+                className="mt-2 rounded-full border border-red-300 bg-white px-3 py-1.5 text-xs font-medium text-red-700 transition hover:bg-red-100"
+              >
+                {UI_EN.restartMenu}
+              </button>
+            </div>
+          )}
           <div ref={bottomRef} />
         </div>
       </div>
