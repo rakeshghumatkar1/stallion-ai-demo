@@ -186,7 +186,7 @@ export default async function DemoPage() {
                   >
                     <h3 className="font-semibold text-white">{c.officialName ?? c.name}</h3>
                     {c.officialName && c.officialName !== c.name && <p className="mt-0.5 text-xs text-slate-500">{c.name}</p>}
-                    {c.description && <p className="mt-3 text-sm leading-relaxed text-slate-400">{c.description}</p>}
+
                   </li>
                 ))}
               </ul>
