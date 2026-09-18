@@ -13,7 +13,7 @@
  * content, inactive content, or out-of-date content. This is core to isolation.
  */
 import "server-only";
-import { and, cosineDistance, desc, eq, gt, gte, isNull, lte, sql } from "drizzle-orm";
+import { and, cosineDistance, desc, eq, gt, gte, isNull, lte, or, sql } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { kbChunks, kbDocuments, type ChunkMetadata } from "@/lib/db/schema";
 import { embed } from "@/lib/kb/embed";
