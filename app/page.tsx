@@ -15,18 +15,12 @@ export const dynamic = "force-dynamic";
 
 const BRAND_GOLD = "#D9B150";
 
-function ordinal(n: number): string {
-  const s = ["th", "st", "nd", "rd"] as const;
-  const v = n % 100;
-  return `${n}${s[(v - 20) % 10] ?? s[v] ?? s[0]}`;
-}
-
 function loadPageData() {
   return {
     event: UAE_EVENT,
     facts: [
+      { field: "location", confirmed: true, value: "Dubai, UAE" },
       { field: "event_date", confirmed: false, value: null },
-      { field: "venue", confirmed: false, value: null },
       { field: "nomination_deadline", confirmed: false, value: null },
       { field: "eligibility_period", confirmed: false, value: null },
     ],
@@ -35,8 +29,8 @@ function loadPageData() {
 }
 
 const FACT_LABELS: Record<string, string> = {
-  event_date: "Ceremony",
-  venue: "Venue",
+  location: "Location",
+  event_date: "Event date",
   nomination_deadline: "Nomination deadline",
   eligibility_period: "Eligibility period",
 };
@@ -50,7 +44,7 @@ export default async function DemoPage() {
   const slug = getActiveEventSlug();
   const { event, facts, cats } = await loadPageData();
 
-  const eyebrow = event ? `${ordinal(event.editionNumber)} edition  ·  Dubai, UAE` : slug;
+  const eyebrow = event ? "DUBAI · UAE · 2027" : slug;
   const title = event?.name ?? "Digital Stallions Forum";
   const contact = event?.contact ?? null;
 
@@ -64,7 +58,7 @@ export default async function DemoPage() {
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/brand/dsf-middle-east.svg" alt="Digital Stallions Forum" className="h-full w-full object-contain" />
             </span>
-            <span className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-300">Digital Stallions Forum</span>
+            <span className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-300">Digital Stallions Forum · Middle East</span>
           </a>
           <nav className="hidden items-center gap-8 text-sm text-slate-400 md:flex">
             <a href="#event" className="transition-colors hover:text-white">
@@ -106,20 +100,24 @@ export default async function DemoPage() {
 
           <div className="space-y-6">
             {/* Middle East / UAE brand identity from the organiser-provided Drive assets. */}
-            <div className="rounded-lg border border-brand-primary/30 bg-white p-6 sm:p-10">
+            <div className="rounded-lg border border-brand-primary/30 bg-white p-7 sm:p-10">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src="/brand/dsf-middle-east.svg"
                 alt="Digital Stallions Forum Middle East"
                 className="mx-auto block h-auto w-full max-w-md object-contain"
               />
+              <div className="mt-6 border-t border-slate-200 pt-5 text-center">
+                <p className="text-xs font-semibold uppercase tracking-[0.28em] text-slate-500">Dubai · UAE · 2027</p>
+                <p className="mt-2 text-sm font-semibold text-slate-900">The Great Marketing &amp; Business Minds</p>
+              </div>
             </div>
             <dl className="divide-y divide-white/10 rounded-lg border border-white/10 bg-white/[0.03]">
               {facts.map((f) => (
                 <div key={f.field} className="flex items-baseline justify-between gap-6 px-5 py-3.5">
                   <dt className="text-xs uppercase tracking-[0.18em] text-slate-500">{FACT_LABELS[f.field] ?? f.field}</dt>
                   <dd className={`text-right text-sm ${f.confirmed ? "text-slate-100" : "italic text-slate-500"}`}>
-                    {f.confirmed ? f.value : "To be confirmed"}
+                    {f.confirmed ? f.value : "To be announced"}
                   </dd>
                 </div>
               ))}
@@ -174,7 +172,7 @@ export default async function DemoPage() {
               <div className="max-w-2xl">
                 <p className="text-xs font-semibold uppercase tracking-[0.28em] text-brand-primary">Award categories</p>
                 <h2 className="mt-4 font-display text-3xl font-semibold text-white sm:text-4xl">
-                  {cats.length ? `${cats.length} UAE award categories to explore` : "UAE award categories"}
+                  {cats.length ? `${cats.length} UAE 2027 award categories to explore` : "UAE 2027 award categories"}
                 </h2>
               </div>
               <LaunchButton className={outlineBtn}>Help me choose a category</LaunchButton>

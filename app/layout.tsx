@@ -20,7 +20,7 @@ const playfair = Playfair_Display({
 
 export const metadata: Metadata = {
   title: "Stallion AI Assistant",
-  description: "AI chatbot by Digital Stallion for The Great Marketing & Business Minds UAE.",
+  description: "AI chatbot by Digital Stallion for The Great Marketing & Business Minds UAE 2027 in Dubai.",
   icons: { icon: "/brand/dsf-middle-east.svg" },
 };
 

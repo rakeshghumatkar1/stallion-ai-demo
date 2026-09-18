@@ -64,7 +64,7 @@ export const PRODUCT_IDENTITY_EN = {
   name: "Stallion AI Assistant",
   /** The public greeting; may be adapted to the event. */
   greeting:
-    "Hi, I'm Stallion AI Assistant. I can help you understand the event, find the categories that may fit your work, and get your nomination started. What would you like to explore?",
+    "Hi, I'm Stallion AI Assistant for The Great Marketing & Business Minds UAE 2027 in Dubai. I can help you understand the event, explore categories that may fit your work, and move towards nomination. What would you like to explore?",
 } as const;
 
 /**

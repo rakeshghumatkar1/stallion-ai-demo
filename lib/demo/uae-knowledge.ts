@@ -18,14 +18,14 @@ const UAE_CONTACT: EventContact = {
 };
 
 export const UAE_EVENT = {
-  slug: "UAE-GMM-2026-TEST",
-  name: "The 4th Edition of The Great Marketing & Business Minds UAE 2026",
+  slug: "UAE-DUBAI-2027-DEMO",
+  name: "The Great Marketing & Business Minds UAE 2027",
   country: "AE",
-  year: 2026,
-  editionNumber: 4,
+  year: 2027,
+  editionNumber: null,
   status: "draft",
   eventDate: null,
-  venue: null,
+  venue: "Dubai, UAE — venue details to be announced",
   eligibilityPeriod: null,
   nominationOpen: null,
   nominationDeadline: null,
@@ -67,11 +67,11 @@ export const UAE_KNOWLEDGE_SECTIONS = [
     id: "uae-overview",
     title: "UAE event overview",
     keywords: ["event", "about", "purpose", "uae", "dubai", "marketing", "business", "who"],
-    content: `The active demo is The 4th Edition of The Great Marketing & Business Minds UAE 2026, an initiative of Digital Stallions Forum UAE. Its stated purpose is to recognise and celebrate marketers, digital marketers, business leaders, their teams and agency partners, and marketing, digital marketing and business achievement across the UAE.
+    content: `The active demo is The Great Marketing & Business Minds UAE 2027 in Dubai, an initiative of Digital Stallions Forum UAE. Its purpose is to recognise and celebrate marketers, digital marketers, business leaders, their teams and agency partners, and marketing, digital marketing and business achievement across the UAE.
 
 The public organiser contact captured for this UAE event is Paurush Sonkar, Founder, Digital Stallions Forum UAE. Email: paurush.sonkar@icloud.com.
 
-The next/current event date and venue are NOT confirmed in the approved demo information. Do not infer them.`,
+Dubai, UAE is the confirmed event city for this demo. The exact venue and event date are not yet confirmed. Do not invent them.`,
   },
   {
     id: "uae-participation-process",
@@ -89,7 +89,7 @@ There is currently no approved nomination form URL in this demo knowledge. If a 
     id: "uae-current-facts",
     title: "UAE current-edition confirmation rules",
     keywords: ["current", "next", "when", "where", "deadline", "venue", "price", "fee", "fees", "cost", "vat", "date", "open", "eligibility"],
-    content: `For the current/next UAE event, the event date, venue, new submission deadline, current eligibility period, current fee/winner charge amount, taxes, and nomination form URL are not confirmed in the approved demo information.
+    content: `For the current UAE 2027 demo, Dubai, UAE is the confirmed event city. The exact venue, event date, submission deadline, eligibility period, fee/winner charge amount, taxes, and nomination form URL are not yet confirmed.
 
 If asked for one of those current facts, say: "I don't have confirmed information about that in the current event information. I can help pass the question to the team."
 
