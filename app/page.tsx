@@ -3,7 +3,7 @@ import Link from "next/link";
 import { and, asc, eq } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { categories, type Event } from "@/lib/db/schema";
-import { getActiveEvent } from "@/lib/event/active";
+import { getActiveEvent, getActiveEventSlug } from "@/lib/event/active";
 import { resolveFacts } from "@/lib/ai/tools";
 import { PRODUCT_IDENTITY_EN } from "@/lib/types";
 import { LaunchButton } from "./launch-button";
@@ -58,7 +58,7 @@ const outlineBtn =
   "inline-flex items-center justify-center rounded-full border border-brand-primary/50 px-6 py-2.5 text-sm font-medium text-brand-primary transition-colors hover:border-brand-primary hover:bg-brand-primary/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary/60";
 
 export default async function DemoPage() {
-  const slug = process.env.ACTIVE_EVENT_ID ?? "(ACTIVE_EVENT_ID not set)";
+  const slug = getActiveEventSlug();
   const { event, facts, cats } = await loadPageData();
 
   const country = event?.country === "IN" ? "India" : event?.country === "AE" ? "UAE" : event?.country;
