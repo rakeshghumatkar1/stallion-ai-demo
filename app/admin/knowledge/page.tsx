@@ -4,6 +4,7 @@ import { z } from "zod";
 import { db } from "@/lib/db";
 import { kbDocuments, type KbDocument } from "@/lib/db/schema";
 import { getActiveEvent } from "@/lib/event/active";
+import { SOURCE_TYPES } from "@/lib/types";
 import { saveKbDocumentAction, setKbApprovalAction } from "../actions";
 import { fmtDateTime, param, toDateTimeLocal, type SearchParams } from "../_lib/format";
 
@@ -56,7 +57,9 @@ export default async function KnowledgePage({ searchParams }: { searchParams: Se
                   {d.title}
                 </Link>
                 <div className="text-xs text-slate-500">
-                  {d.scope} · v{d.version} · {d.approvalStatus}
+                  {d.scope} · {d.sourceType}
+                  {d.provisional && <span className="ml-1 rounded bg-amber-100 px-1 text-amber-800">historical</span>} · v
+                  {d.version} · {d.approvalStatus}
                   {!d.active && " · inactive"} · {fmtDateTime(d.updatedAt)}
                 </div>
               </div>
@@ -103,6 +106,20 @@ export default async function KnowledgePage({ searchParams }: { searchParams: Se
                   <option value="draft">draft (not visible to the assistant)</option>
                   <option value="approved">approved (live)</option>
                 </select>
+              </label>
+              <label className={label}>
+                Source type (File 01 §2 priority)
+                <select name="sourceType" defaultValue={editing?.sourceType ?? "edition_config"} className={input}>
+                  {SOURCE_TYPES.map((s) => (
+                    <option key={s} value={s}>
+                      {s}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label className="flex items-end gap-2 pb-2 text-sm text-slate-600">
+                <input type="checkbox" name="provisional" defaultChecked={editing?.provisional ?? false} />
+                Historical / provisional (never presented as current; forced for website)
               </label>
               <label className={label}>
                 Effective from (UTC, optional)

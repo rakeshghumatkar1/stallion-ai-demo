@@ -67,6 +67,48 @@ npm run typecheck && npm run lint && npm run db:generate && npm run build && npm
 
 Tests never need a database, network, or API keys.
 
+## Knowledge base and content package
+
+The assistant's knowledge rules are defined in
+[docs/knowledge-base/01-kb-plan-and-source-rules.md](docs/knowledge-base/01-kb-plan-and-source-rules.md)
+(closed-world rule, source priority, the three answer states, escalation
+triggers). Approved content lives in `content/` (see
+[content/README.md](content/README.md)) and is loaded with:
+
+```bash
+npm run content:load                       # evergreen + the ACTIVE_EVENT_ID edition
+npm run content:load -- --event UAE-2026
+```
+
+`npm run seed` stays as the sample fallback. When File 04 (behaviour prompt)
+arrives, paste it into `lib/ai/behaviour-prompt.md`; when File 05 (test
+questions) arrives, put it in `tests/questions/` and run:
+
+```bash
+npm run questions -- --base http://localhost:3000
+```
+
+## New edition
+
+Annual update workflow (File 01 §10). For each new event:
+
+1. Copy the previous edition configuration: `content/editions/<OLD>/config.json`
+   → `content/editions/<NEW_EVENT_ID>/config.json`.
+2. Change the event year and edition number.
+3. Replace the eligibility period and deadlines.
+4. Update the event date and venue.
+5. Confirm fees and payment wording (fees + taxes).
+6. Confirm nomination forms / URLs.
+7. Confirm active categories and remove retired ones.
+8. Confirm the public jury list (stored confidentially; never shown by the assistant).
+9. Confirm organiser contact details.
+10. Mark the edition APPROVED only after organiser review: set `status` to
+    `open` and documents to `approval_status: approved`.
+11. Run the test-question suites (`npm run questions`) before public release.
+
+Then deploy with `ACTIVE_EVENT_ID=<NEW_EVENT_ID>` and run `npm run content:load`.
+The evergreen file is not rewritten unless the operating model itself changes.
+
 ## Admin
 
 `/admin` — simple env-based login (Phase 1). Read views for conversations,

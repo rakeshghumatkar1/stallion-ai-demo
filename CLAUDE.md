@@ -99,6 +99,56 @@ reads or edits the pinned event's rows (plus evergreen KB).
 
 ---
 
+## Knowledge rules (authority: `docs/knowledge-base/01-kb-plan-and-source-rules.md`)
+
+That document (File 01 of the knowledge package) is the authority for how the
+assistant handles knowledge. Future sessions must follow it. Summary:
+
+- **Closed-world rule (§4).** For event facts the assistant knows only what is
+  in the approved active knowledge base. Anything else gets this exact
+  wording, and the question is logged as unanswered:
+  _"I don't have confirmed information about that in the current event
+  information. I can help pass the question to the team."_ Never fill a gap
+  from model memory or the open web. (`NO_CONFIRMED_INFO` in
+  `lib/ai/guardrails.ts`; UNSUPPORTED turns are auto-logged by the route.)
+- **Source priority (§2).** (1) approved Edition Configuration → (2) approved
+  Evergreen Core Knowledge → (3) confirmed meeting decisions / approved notes →
+  (4) current website text, as reference or historical evidence only. If
+  sources conflict, never guess: say it needs confirmation and offer the team.
+  (`kb_documents.source_type`; context items are labelled with their bucket.)
+- **Website-content rule (§3).** Website-derived material is provisional
+  (`kb_documents.provisional`, forced for `source_type = website`). Retrieval
+  keeps it, but the prompt prefixes it with
+  `[HISTORICAL, not confirmed for the current edition]` so it is never
+  presented as a current date, fee, deadline, or category year.
+- **Three answer states (§5).** Every reply is SUPPORTED (exact fact exists in
+  approved knowledge), ADVISORY (category matching / judgement — "appear
+  potentially relevant", never "you qualify" unless an approved deterministic
+  rule establishes it), or UNSUPPORTED (missing, conflicting, expired, private,
+  or needs organiser approval — fallback wording + team offer). The model ends
+  each reply with a `[[state:…]]` marker; `lib/ai/answer-state.ts` strips it
+  from the stream, the route stores it in `messages.answer_state`, surfaces it
+  as a message annotation, and the admin transcript shows it.
+- **Escalation triggers (§8).** Sponsorship/partnership; bulk or high-volume
+  participation; commercial negotiation or discount request; deadline extension
+  or exception request; material eligibility ambiguity; conflicting
+  information; complaint or dispute; privacy request; explicit request for a
+  person; an important question the approved KB cannot answer.
+- **Lead fields (§9).** Help first, ask later; collect only: name, company,
+  email, mobile only if a callback is requested (`leads.callback_requested`),
+  visitor type, categories of interest, approximate entries, short summary.
+- **Product identity (§12).** "Stallion AI Assistant", subtitle "AI Chatbot by
+  Digital Stallion", greeting adaptable to the event (`PRODUCT_IDENTITY_EN`).
+- **Where the rules live.** Behaviour rules are encoded in
+  `lib/ai/system-prompt.ts`; when File 04 arrives it is pasted into
+  `lib/ai/behaviour-prompt.md` and replaces them with no code change (the
+  app-owned sections — tool efficiency, answer-state protocol, event identity,
+  CONTEXT — are always appended). Content is loaded from `content/` by
+  `scripts/load-content.ts`; File 05 question suites live in `tests/questions/`
+  and run with `scripts/run-questions.ts`.
+
+---
+
 ## Defense in depth
 
 | # | Layer | Where | Guarantees |
@@ -163,12 +213,19 @@ lib/
   handoff/notify.ts   team notification adapter (email | slack | whatsapp)
   auth.ts             simple admin auth (seam for Auth.js)
   types.ts            shared types + QUICK_ACTIONS chips
+  ai/answer-state.ts  answer-state marker: stream transform + inference
+  ai/behaviour-prompt.md  File 04 slot (replaces inline behaviour rules when filled)
 public/embed.js       script sites include; injects the iframe
 scripts/migrate.ts    CREATE EXTENSION vector; then runs migrations
-scripts/seed.ts       sample INDIA-2027 event + categories + KB + form
+scripts/seed.ts       sample INDIA-2027 event + categories + KB + form (fallback)
+scripts/load-content.ts  loads content/ (File 02 + File 03) into the DB
+scripts/run-questions.ts live runner for tests/questions (File 05)
 scripts/tsconfig.json tsx config that aliases `server-only` to a shim
+content/              evergreen/ (File 02) + editions/<EVENT_ID>/ (File 03)
+docs/knowledge-base/  File 01 — the knowledge authority
 drizzle/              migrations
-tests/                normal + adversarial (pure helpers only)
+tests/                normal + adversarial + knowledge (pure helpers only)
+tests/questions/      File 05 suites (run live with scripts/run-questions.ts)
 ```
 
 ---
@@ -196,7 +253,7 @@ tests/                normal + adversarial (pure helpers only)
 
 | Tool | Purpose |
 | --- | --- |
-| `get_event_facts(fields[])` | The ONLY source of hard facts for the active event. Unset field → `confirmed:false`. |
+| `get_event_facts(fields[])` | The ONLY source of hard facts for the active event (incl. `sponsors` and in-date `announcements`). Unset field → `confirmed:false`. |
 | `list_categories()` | Active categories for the event. |
 | `suggest_categories(description)` | Semantic match, framed "may be relevant" + disclaimer. |
 | `get_form(category?)` | Approved, active nomination form URL. |
@@ -216,12 +273,15 @@ specific person.
 UUID PKs, tz timestamps. Every content/conversation row carries `event_id`
 (evergreen KB is the nullable exception, tagged by `scope`).
 
-`events` (slug = ACTIVE_EVENT_ID, fees/taxes/contact jsonb) · `categories`
-(eligibility_rules jsonb with optional `deterministic` block) · `kb_documents`
-(scope, approval_status, version, effective/expiry/last_verified, active) ·
-`kb_chunks` (embedding vector, HNSW cosine index) · `forms` · `conversations` ·
-`messages` · `leads` · `handoffs` · `unanswered_questions` · `jury`
-(**CONFIDENTIAL — never read by any chat tool or retrieval query**) · `admins`.
+`events` (slug = ACTIVE_EVENT_ID, fees/taxes/contact/sponsors/announcements
+jsonb — announcements carry effective/expiry dates and are surfaced only while
+in date) · `categories` (eligibility_rules jsonb with optional `deterministic`
+block) · `kb_documents` (scope, source_type, provisional, approval_status,
+version, effective/expiry/last_verified, active) · `kb_chunks` (embedding
+vector, HNSW cosine index) · `forms` · `conversations` · `messages`
+(answer_state on assistant rows) · `leads` (callback_requested) · `handoffs` ·
+`unanswered_questions` · `jury` (**CONFIDENTIAL — never read by any chat tool
+or retrieval query**) · `admins`.
 
 The first migration runs `CREATE EXTENSION IF NOT EXISTS vector;` before the
 tables. `scripts/migrate.ts` also guarantees the extension exists.

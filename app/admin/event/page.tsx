@@ -28,6 +28,23 @@ export default async function EventPage({ searchParams }: { searchParams: Search
       {saved && <p className="mb-3 rounded bg-green-50 p-2 text-sm text-green-700">Saved.</p>}
       {error && <p className="mb-3 rounded bg-red-50 p-2 text-sm text-red-700">{error}</p>}
 
+      <details className="mb-4 rounded-lg border border-slate-200 bg-white p-3 text-sm">
+        <summary className="cursor-pointer font-medium">New edition checklist (File 01 §10)</summary>
+        <ol className="mt-2 list-decimal space-y-0.5 pl-5 text-slate-600">
+          <li>Copy the previous edition configuration (content/editions/&lt;EVENT_ID&gt;/config.json).</li>
+          <li>Change event year and edition number.</li>
+          <li>Replace eligibility period and deadlines.</li>
+          <li>Update event date and venue.</li>
+          <li>Confirm fees and payment wording (taxes).</li>
+          <li>Confirm nomination forms / URLs.</li>
+          <li>Confirm active categories and retire old ones.</li>
+          <li>Confirm the jury list (stored confidentially, never shown by the assistant).</li>
+          <li>Confirm organiser contact details.</li>
+          <li>Set status to <code>open</code> and approve knowledge only after organiser review.</li>
+          <li>Run the File 05 question suites (<code>npm run questions</code>) before public release.</li>
+        </ol>
+      </details>
+
       <form action={updateEventAction} className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <label className={`${label} md:col-span-2`}>
           Name
@@ -85,6 +102,20 @@ export default async function EventPage({ searchParams }: { searchParams: Search
         <label className={`${label} md:col-span-2`}>
           Contact (JSON: {'{ "team": "...", "email": "...", "phone": "...", "whatsapp": "...", "website": "..." }'})
           <textarea name="contact" rows={5} defaultValue={pretty(event.contact)} className={`${input} font-mono text-xs`} />
+        </label>
+        <label className={label}>
+          Sponsors (JSON array: {'[{ "name": "...", "tier": "Gold", "url": "https://..." }]'})
+          <textarea name="sponsors" rows={5} defaultValue={pretty(event.sponsors)} className={`${input} font-mono text-xs`} />
+        </label>
+        <label className={label}>
+          Announcements — extensions or special conditions, shown only while in date (JSON array:{" "}
+          {'[{ "text": "...", "effectiveDate": "2026-09-01", "expiryDate": "2026-12-15" }]'})
+          <textarea
+            name="announcements"
+            rows={5}
+            defaultValue={pretty(event.announcements)}
+            className={`${input} font-mono text-xs`}
+          />
         </label>
         <div className="md:col-span-2">
           <button type="submit" className="rounded-md bg-stallion-accent px-4 py-2 text-sm font-medium text-white">

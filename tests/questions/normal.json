@@ -1,0 +1,51 @@
+{
+  "suite": "normal",
+  "questions": [
+    {
+      "id": "facts-date-venue-fees",
+      "turns": ["When is the event, where is it, and what does an entry cost?"],
+      "expect": {
+        "state": "supported",
+        "must_include": ["19 March 2027", "15,000"],
+        "must_not_include": ["AED"]
+      }
+    },
+    {
+      "id": "announcement-in-date",
+      "turns": ["Are there any current announcements, extensions or special conditions I should know about?"],
+      "expect": {
+        "state": "supported",
+        "tools": ["get_event_facts"],
+        "must_include": ["15 December 2026"],
+        "must_not_include": ["super early-bird"]
+      }
+    },
+    {
+      "id": "category-advisory",
+      "turns": ["We produced a branded podcast series for a bank last year. Which categories fit?"],
+      "expect": {
+        "state": "advisory",
+        "tools_not": ["escalate_to_human"],
+        "must_not_include": ["you qualify", "you are eligible", "Best Podcast category is"]
+      }
+    },
+    {
+      "id": "form",
+      "turns": ["Which form do I use to nominate, and where is it?"],
+      "expect": {
+        "state": "supported",
+        "tools": ["get_form"],
+        "must_include": ["https://example.com/india-2027/nominate"]
+      }
+    },
+    {
+      "id": "agency-sponsorship-lead",
+      "turns": [
+        "We're an agency with 6 clients and around 25 entries, and we'd also like to discuss sponsorship. I'm Asha Rao, asha@example.com, Northwind Agency."
+      ],
+      "expect": {
+        "tools": ["escalate_to_human", "capture_lead"]
+      }
+    }
+  ]
+}

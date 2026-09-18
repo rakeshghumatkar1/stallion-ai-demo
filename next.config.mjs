@@ -4,6 +4,9 @@ const nextConfig = {
   // Hide the floating Next.js dev badge (the "N") so it doesn't overlap the
   // widget UI during local development. Presentation only.
   devIndicators: false,
+  // The behaviour prompt (File 04 slot) is read from disk at runtime; make sure
+  // serverless bundles include it alongside the chat route.
+  outputFileTracingIncludes: { "/api/chat": ["./lib/ai/behaviour-prompt.md"] },
   // The widget is embedded via an iframe on third-party award sites, so we must
   // NOT send X-Frame-Options: DENY. There is no per-request edition — only the
   // pinned event: the deployment serves one event (ACTIVE_EVENT_ID), so the

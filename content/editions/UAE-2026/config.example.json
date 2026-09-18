@@ -1,0 +1,66 @@
+{
+  "_readme": "Copy to config.json and fill in ORGANISER-APPROVED values only. Every key mirrors File 01 §1B (Edition Configuration). Dates are ISO 8601 in UTC. Leave a value null if it is not confirmed — the assistant will then say it is not confirmed rather than guess. Do NOT paste website dates/fees as current (File 01 §3).",
+
+  "slug": "UAE-2026",
+  "name": "The Great Marketing & Business Minds UAE 2026",
+  "country": "AE",
+  "year": 2026,
+  "edition_number": null,
+  "status": "draft",
+
+  "eligibility_period": null,
+  "nomination_open": null,
+  "nomination_deadline": null,
+  "event_date": null,
+  "venue": null,
+
+  "fees": {
+    "_example": { "amount": 0, "currency": "AED", "note": "replace with approved fee / winner participation charges" }
+  },
+  "taxes": {
+    "_example": { "label": "VAT", "rate": 0, "note": "replace with approved rate" }
+  },
+
+  "categories": [
+    {
+      "name": "Example Category (replace)",
+      "official_name": null,
+      "description": "One-line description used for semantic category matching.",
+      "eligibility_rules": {
+        "summary": "Plain-language eligibility summary shown to the assistant.",
+        "requirements": [],
+        "deterministic": {}
+      },
+      "client_approval_required": false,
+      "active": true
+    }
+  ],
+
+  "forms": [
+    { "name": "General nomination form", "url": "https://example.com/replace-me", "category": null }
+  ],
+
+  "jury": [
+    { "name": "Replace me", "details": "Confidential — never exposed by the assistant", "confidential": true }
+  ],
+
+  "contact": {
+    "team": "Organiser team name (not a person)",
+    "email": "team@example.com",
+    "phone": null,
+    "whatsapp": null,
+    "website": "https://example.com"
+  },
+
+  "sponsors": [
+    { "name": "Example Sponsor (replace)", "tier": null, "url": null }
+  ],
+
+  "announcements": [
+    {
+      "text": "Example temporary condition, e.g. an approved deadline extension. Remove if none.",
+      "effective_date": null,
+      "expiry_date": null
+    }
+  ]
+}

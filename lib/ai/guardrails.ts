@@ -20,7 +20,7 @@ import type { GroundingFlag, GroundingResult } from "@/lib/types";
  * or a requested fact is unconfirmed.
  */
 export const NO_CONFIRMED_INFO =
-  "I don't have confirmed information on that yet — I can connect you with the team so they can help you directly.";
+  "I don't have confirmed information about that in the current event information. I can help pass the question to the team.";
 
 const MAX_USER_CHARS = 8000;
 

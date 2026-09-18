@@ -44,6 +44,8 @@ export async function retrieve(opts: RetrieveOptions): Promise<RetrievedChunk[]>
       content: kbChunks.content,
       scope: kbChunks.scope,
       metadata: kbChunks.metadata,
+      sourceType: kbDocuments.sourceType,
+      provisional: kbDocuments.provisional,
       score: similarity,
     })
     .from(kbChunks)
@@ -72,6 +74,10 @@ export async function retrieve(opts: RetrieveOptions): Promise<RetrievedChunk[]>
       documentTitle: meta.documentTitle,
       source: meta.source,
       scope: r.scope,
+      sourceType: r.sourceType,
+      // Provisional chunks are still retrievable (they are approved context)
+      // but the prompt labels them HISTORICAL so they are never shown as current.
+      provisional: r.provisional,
     } satisfies RetrievedChunk;
   });
 }

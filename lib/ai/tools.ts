@@ -24,7 +24,7 @@ import {
   leads,
   unansweredQuestions,
 } from "@/lib/db/schema";
-import type { Event } from "@/lib/db/schema";
+import type { Event, EventAnnouncement } from "@/lib/db/schema";
 import { embedMany } from "@/lib/kb/embed";
 import { notifyHandoff } from "@/lib/handoff/notify";
 import { FACT_FIELDS, VISITOR_TYPES } from "@/lib/types";
@@ -91,7 +91,53 @@ function formatContact(contact: Event["contact"]): string | null {
  * Unset columns come back as { confirmed: false, value: null } so the caller/
  * model uses the not-confirmed pattern instead of guessing.
  */
-export function resolveFacts(event: Event, fields: FactField[]): ResolvedFact[] {
+function formatSponsors(sponsors: Event["sponsors"]): string | null {
+  if (!sponsors || sponsors.length === 0) return null;
+  return sponsors.map((s) => (s.tier ? `${s.name} (${s.tier})` : s.name)).join("; ");
+}
+
+function parseIso(value: string | null | undefined): Date | null {
+  if (!value) return null;
+  const d = new Date(value);
+  return Number.isNaN(d.getTime()) ? null : d;
+}
+
+/**
+ * Announcements currently in effect (File 01 §1B "temporary announcements,
+ * extensions or special conditions"). Expired or not-yet-effective items are
+ * never surfaced, so an old extension cannot be presented as current.
+ */
+export function activeAnnouncements(
+  announcements: Event["announcements"],
+  now: Date = new Date(),
+): EventAnnouncement[] {
+  if (!announcements) return [];
+  return announcements.filter((a) => {
+    const from = parseIso(a.effectiveDate);
+    const to = parseIso(a.expiryDate);
+    if (from && from > now) return false;
+    if (to && to < now) return false;
+    return Boolean(a.text && a.text.trim());
+  });
+}
+
+function formatAnnouncements(announcements: Event["announcements"], now: Date): string | null {
+  // Never configured → not confirmed. Configured but none in effect → a
+  // confirmed "none currently" (that absence is itself approved information).
+  if (!announcements) return null;
+  const active = activeAnnouncements(announcements, now);
+  if (active.length === 0) {
+    return "No announcements, extensions, or special conditions are currently in effect.";
+  }
+  return active
+    .map((a) => {
+      const until = parseIso(a.expiryDate);
+      return until ? `${a.text.trim()} (valid until ${formatDate(until)})` : a.text.trim();
+    })
+    .join(" | ");
+}
+
+export function resolveFacts(event: Event, fields: FactField[], now: Date = new Date()): ResolvedFact[] {
   const wanted = fields.length ? fields : FACT_FIELDS;
   return wanted.map((field): ResolvedFact => {
     let value: string | null = null;
@@ -119,6 +165,12 @@ export function resolveFacts(event: Event, fields: FactField[]): ResolvedFact[] 
         break;
       case "contact":
         value = formatContact(event.contact);
+        break;
+      case "sponsors":
+        value = formatSponsors(event.sponsors);
+        break;
+      case "announcements":
+        value = formatAnnouncements(event.announcements, now);
         break;
     }
     const confirmed = value !== null && value !== "";
@@ -166,7 +218,8 @@ const captureLeadInput = z.object({
   org: z.string().max(200).optional(),
   role: z.string().max(200).optional(),
   email: z.string().email().optional(),
-  phone: z.string().max(50).optional(),
+  phone: z.string().max(50).optional().describe("Mobile number — collect ONLY if the visitor asked for a callback."),
+  callback_requested: z.boolean().optional().describe("True only if the visitor asked to be called back."),
   visitor_type: z.enum(VISITOR_TYPES as [string, ...string[]]).optional(),
   approx_entries: z.number().int().min(0).max(100000).optional(),
   categories_discussed: z.array(z.string().max(200)).max(50).optional(),
@@ -193,7 +246,7 @@ export function makeTools(ctx: ToolContext): Record<string, Tool> {
   return {
     get_event_facts: tool({
       description:
-        "Get approved structured facts for THIS event (dates, venue, deadline, nomination-open, eligibility period, fees, taxes, contacts). The ONLY source of hard facts. Unset fields return confirmed:false — use the not-confirmed line, never guess.",
+        "Get approved structured facts for THIS event (dates, venue, deadline, nomination-open, eligibility period, fees, taxes, contacts, sponsors, and current announcements such as extensions or special conditions — only while in date). The ONLY source of hard facts. Unset fields return confirmed:false — use the fallback wording, never guess.",
       parameters: getEventFactsInput,
       execute: async ({ fields }) => {
         const facts = resolveFacts(ctx.event, fields as FactField[]);
@@ -297,7 +350,7 @@ export function makeTools(ctx: ToolContext): Record<string, Tool> {
 
     capture_lead: tool({
       description:
-        "Save the visitor's details as a lead. Call ONLY after you have actually helped, and only with details the visitor volunteered.",
+        "Save the visitor's details as a lead. Help first, ask later. Call ONLY after you have actually helped, and only with details the visitor volunteered: name, company (org), email, mobile (phone) only if a callback was requested, visitor type, categories of interest, approximate entries, and a short summary (purpose).",
       parameters: captureLeadInput,
       execute: async (input) => {
         const [row] = await db
@@ -310,6 +363,7 @@ export function makeTools(ctx: ToolContext): Record<string, Tool> {
             role: input.role ?? null,
             email: input.email ?? null,
             phone: input.phone ?? null,
+            callbackRequested: input.callback_requested ?? false,
             visitorType: input.visitor_type ?? null,
             approxEntries: input.approx_entries ?? null,
             categoriesDiscussed: input.categories_discussed ?? null,

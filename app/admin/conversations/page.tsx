@@ -8,6 +8,24 @@ import { fmtDateTime, param, pretty, type SearchParams } from "../_lib/format";
 
 export const dynamic = "force-dynamic";
 
+/**
+ * Answer state per assistant turn (File 01 §5) so reviewers can audit where
+ * the assistant was confident, advising, or unsure.
+ */
+function AnswerStateBadge({ state }: { state: string | null }) {
+  const styles: Record<string, string> = {
+    supported: "bg-green-100 text-green-800",
+    advisory: "bg-amber-100 text-amber-800",
+    unsupported: "bg-red-100 text-red-800",
+  };
+  const cls = state ? (styles[state] ?? "bg-slate-100 text-slate-600") : "bg-slate-100 text-slate-500";
+  return (
+    <span className={`rounded px-1.5 py-0.5 text-[10px] font-semibold normal-case tracking-normal ${cls}`}>
+      {state ?? "no state"}
+    </span>
+  );
+}
+
 export default async function ConversationsPage({ searchParams }: { searchParams: SearchParams }) {
   const event = await getActiveEvent();
   const id = z.string().uuid().safeParse(param((await searchParams).id));
@@ -42,8 +60,11 @@ export default async function ConversationsPage({ searchParams }: { searchParams
         <ol className="space-y-2">
           {rows.map((m) => (
             <li key={m.id} className={`rounded-lg border p-3 text-sm ${m.role === "user" ? "border-indigo-200 bg-indigo-50" : "border-slate-200 bg-white"}`}>
-              <div className="mb-1 text-xs uppercase tracking-wide text-slate-500">
-                {m.role} · {fmtDateTime(m.createdAt)}
+              <div className="mb-1 flex flex-wrap items-center gap-2 text-xs uppercase tracking-wide text-slate-500">
+                <span>
+                  {m.role} · {fmtDateTime(m.createdAt)}
+                </span>
+                {m.role === "assistant" && <AnswerStateBadge state={m.answerState} />}
               </div>
               <div className="whitespace-pre-wrap">{m.content}</div>
               {m.toolCalls != null && (

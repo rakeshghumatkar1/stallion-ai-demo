@@ -17,6 +17,11 @@ export function makeEvent(overrides: Partial<Event> = {}): Event {
     fees: { standard: { amount: 15000, currency: "INR", note: "per entry" } },
     taxes: { gst: { label: "GST", rate: 18 } },
     contact: { team: "Digital Stallion Awards Team", email: "awards@example.com" },
+    sponsors: [{ name: "Sample Sponsor", tier: "Gold" }],
+    announcements: [
+      { text: "Early-bird rate applies before 15 December 2026.", effectiveDate: "2026-09-01", expiryDate: "2026-12-15" },
+      { text: "Super early-bird rate closed.", effectiveDate: "2026-06-01", expiryDate: "2026-08-31" },
+    ],
     status: "open",
     active: true,
     createdAt: new Date("2026-01-01T00:00:00Z"),

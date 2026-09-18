@@ -43,6 +43,16 @@ export type EventContact = {
   whatsapp?: string;
   website?: string;
 };
+export type EventSponsor = { name: string; tier?: string | null; url?: string | null };
+/**
+ * Temporary announcements, extensions or special conditions (File 01 §1B).
+ * ISO date strings; only surfaced by get_event_facts while in date.
+ */
+export type EventAnnouncement = {
+  text: string;
+  effectiveDate?: string | null;
+  expiryDate?: string | null;
+};
 export type EligibilityRules = {
   summary?: string;
   requirements?: string[];
@@ -75,6 +85,8 @@ export const events = pgTable("events", {
   fees: jsonb("fees").$type<EventFees>(),
   taxes: jsonb("taxes").$type<EventTaxes>(),
   contact: jsonb("contact").$type<EventContact>(),
+  sponsors: jsonb("sponsors").$type<EventSponsor[]>(),
+  announcements: jsonb("announcements").$type<EventAnnouncement[]>(),
   status: text("status").notNull().default("draft"), // draft | open | closed
   active: boolean("active").notNull().default(true),
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
@@ -107,6 +119,12 @@ export const kbDocuments = pgTable("kb_documents", {
   title: text("title").notNull(),
   body: text("body").notNull(),
   source: text("source"),
+  // Source priority bucket (File 01 §2): edition_config | evergreen |
+  // meeting_notes | website. Website content is historical evidence only.
+  sourceType: text("source_type").notNull().default("edition_config"),
+  // Historical / website-derived content: retrieval labels it so the model
+  // never presents it as a current date, fee, deadline, or category year.
+  provisional: boolean("provisional").notNull().default(false),
   approvalStatus: text("approval_status").notNull().default("draft"), // 'draft' | 'approved'
   version: integer("version").notNull().default(1),
   effectiveDate: timestamp("effective_date", { withTimezone: true }),
@@ -177,6 +195,8 @@ export const messages = pgTable("messages", {
   role: text("role").notNull(), // system | user | assistant | tool
   content: text("content").notNull(),
   toolCalls: jsonb("tool_calls").$type<unknown>(),
+  // supported | advisory | unsupported (File 01 §5); null for user rows.
+  answerState: text("answer_state"),
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
 });
 
@@ -195,6 +215,8 @@ export const leads = pgTable("leads", {
   role: text("role"),
   email: text("email"),
   phone: text("phone"),
+  // Mobile is collected only when a callback is requested (File 01 §9).
+  callbackRequested: boolean("callback_requested").notNull().default(false),
   visitorType: text("visitor_type"), // brand | agency | individual | sponsor
   approxEntries: integer("approx_entries"),
   categoriesDiscussed: text("categories_discussed").array(),

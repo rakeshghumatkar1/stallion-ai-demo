@@ -12,11 +12,12 @@
  * Visitor turns are wrapped as untrusted data. Hard facts only ever reach the
  * model through tools. Nothing here can select another event.
  */
-import { streamText, type Message } from "ai";
+import { createDataStreamResponse, streamText, type Message, type ToolSet } from "ai";
 import { z } from "zod";
 import { eq } from "drizzle-orm";
 import { db } from "@/lib/db";
-import { conversations, messages } from "@/lib/db/schema";
+import { conversations, messages, unansweredQuestions } from "@/lib/db/schema";
+import { answerStateTransform, extractAnswerState, inferAnswerState } from "@/lib/ai/answer-state";
 import { getActiveEvent } from "@/lib/event/active";
 import { retrieve } from "@/lib/kb/retrieve";
 import { buildSystemPrompt } from "@/lib/ai/system-prompt";
@@ -30,7 +31,7 @@ import {
   sanitizeUserText,
   wrapUntrustedUserContent,
 } from "@/lib/ai/guardrails";
-import type { RetrievedChunk, ToolContext } from "@/lib/types";
+import type { AnswerState, RetrievedChunk, ToolContext } from "@/lib/types";
 
 export const runtime = "nodejs"; // postgres.js + server-only need Node, not Edge
 export const maxDuration = 30;
@@ -169,6 +170,13 @@ export async function POST(req: Request) {
     const modelMessages = toModelMessages(body.messages);
     const ctx: ToolContext = { event, eventId: event.id, conversationId: convId };
 
+    // Answer state (File 01 §5): the model ends its reply with a marker, the
+    // transform strips it from the stream and reports it here; onFinish falls
+    // back to inference so a state is always recorded.
+    let markerState: AnswerState | null = null;
+    let resolveState!: (state: AnswerState) => void;
+    const statePromise = new Promise<AnswerState>((resolve) => (resolveState = resolve));
+
     const result = streamText({
       model: getModel(),
       system,
@@ -181,12 +189,25 @@ export async function POST(req: Request) {
       // Fast tier + low reasoning effort for latency; strictSchemas:false
       // because our tools have optional args (Zod validates them server-side).
       providerOptions: getChatProviderOptions(),
-      // The data stream masks errors from the visitor (see getErrorMessage
-      // below); log the real one server-side so failures are diagnosable.
+      experimental_transform: answerStateTransform<ToolSet>((state) => {
+        markerState = state;
+      }),
+      // The data stream masks errors from the visitor (see onError on the
+      // response below); log the real one server-side so failures are diagnosable.
       onError({ error }) {
         console.error("[chat] stream error", { conversationId: convId, error });
       },
-      async onFinish({ text, steps }) {
+      async onFinish({ text: rawText, steps }) {
+        // `rawText` is post-transform; re-extract defensively in case a marker
+        // slipped through (e.g. mid-text), then infer if the model omitted it.
+        const extracted = extractAnswerState(rawText);
+        const text = extracted.text;
+        const state: AnswerState = markerState ?? extracted.state ?? inferAnswerState(text);
+        if (!markerState && !extracted.state) {
+          console.warn("[answer-state] marker missing; state inferred", { conversationId: convId, state });
+        }
+        resolveState(state);
+
         // Tool results are typed per-tool by the SDK; with a dynamic tool set
         // they collapse to `never`, so read the generic shape explicitly.
         type AnyToolResult = { toolName: string; args: unknown; result: unknown };
@@ -219,7 +240,28 @@ export async function POST(req: Request) {
           // instruction instead of only logging.
         }
 
-        // 5b. Persist the turn (raw visitor text, not the wrapped form).
+        // 5b. UNSUPPORTED turns are always logged as unanswered questions by
+        //     the app (File 01 §4), whether or not the model called the tool,
+        //     and must carry the handoff offer.
+        if (state === "unsupported") {
+          const alreadyLogged = toolActivity.some((t) => t.tool === "log_unanswered");
+          if (!alreadyLogged) {
+            try {
+              await db.insert(unansweredQuestions).values({
+                conversationId: convId,
+                eventId: event.id,
+                question: lastText,
+              });
+            } catch (err) {
+              console.error("[chat] failed to log unanswered question", err);
+            }
+          }
+          if (!/\bteam\b/i.test(text)) {
+            console.warn("[answer-state] unsupported reply without a team offer", { conversationId: convId });
+          }
+        }
+
+        // 5c. Persist the turn (raw visitor text, not the wrapped form).
         try {
           await db.insert(messages).values([
             { conversationId: convId, role: "user", content: lastText },
@@ -228,6 +270,7 @@ export async function POST(req: Request) {
               role: "assistant",
               content: text,
               toolCalls: toolActivity.length ? toolActivity : null,
+              answerState: state,
             },
           ]);
         } catch (err) {
@@ -236,10 +279,16 @@ export async function POST(req: Request) {
       },
     });
 
-    return result.toDataStreamResponse({
+    return createDataStreamResponse({
       headers: { "x-conversation-id": convId },
-      getErrorMessage: () =>
-        "The assistant hit a problem. Please try again, or ask to speak with the team.",
+      onError: () => "The assistant hit a problem. Please try again, or ask to speak with the team.",
+      async execute(dataStream) {
+        result.mergeIntoDataStream(dataStream);
+        // Surface the recorded state to clients (widget, question runner) as a
+        // message annotation once the turn has finished.
+        const state = await statePromise;
+        dataStream.writeMessageAnnotation({ answerState: state });
+      },
     });
   } catch (err) {
     console.error("[chat] request failed", err);

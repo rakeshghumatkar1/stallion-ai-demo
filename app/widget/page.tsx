@@ -9,15 +9,16 @@
  */
 import { useChat } from "@ai-sdk/react";
 import { useEffect, useRef, useState } from "react";
-import { QUICK_ACTIONS } from "@/lib/types";
+import { PRODUCT_IDENTITY_EN, QUICK_ACTIONS } from "@/lib/types";
 
 // UI strings as data so a second language can be added by translation only.
+// Product identity (File 01 §12) is shared with the system prompt.
 const UI_EN = {
-  title: "Stallion AI Assistant",
-  subtitle: "AI chatbot by Digital Stallion",
+  title: PRODUCT_IDENTITY_EN.name,
+  subtitle: PRODUCT_IDENTITY_EN.subtitle,
   disclosure:
     "You're chatting with an AI assistant. It shares only confirmed event information and can connect you with the team for anything else.",
-  welcome: "Hi! I'm the Stallion AI Assistant. How can I help you with the awards today?",
+  welcome: PRODUCT_IDENTITY_EN.greeting,
   placeholder: "Ask about the event, categories, or how to nominate…",
   send: "Send",
   thinking: "Checking…",

@@ -12,6 +12,7 @@ import { eq } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { kbChunks, kbDocuments, type ChunkMetadata } from "@/lib/db/schema";
 import { embedMany } from "@/lib/kb/embed";
+import type { SourceType } from "@/lib/types";
 
 export interface ChunkOptions {
   /** Target chunk size in characters. */
@@ -76,6 +77,10 @@ export interface IngestInput {
   expiryDate?: Date | null;
   lastVerified?: Date | null;
   active?: boolean;
+  /** File 01 §2 bucket. Defaults to 'evergreen' for evergreen scope, else 'edition_config'. */
+  sourceType?: SourceType;
+  /** Historical / website-derived. Forced true when sourceType is 'website'. */
+  provisional?: boolean;
 }
 
 export interface IngestResult {
@@ -91,6 +96,8 @@ export async function ingestDocument(input: IngestInput): Promise<IngestResult> 
     throw new Error("An event-scoped document requires an eventId.");
   }
   const eventId = input.scope === "evergreen" ? null : input.eventId;
+  const sourceType: SourceType =
+    input.sourceType ?? (input.scope === "evergreen" ? "evergreen" : "edition_config");
 
   const pieces = chunkText(input.body);
   const vectors = pieces.length ? await embedMany(pieces) : [];
@@ -108,6 +115,9 @@ export async function ingestDocument(input: IngestInput): Promise<IngestResult> 
       expiryDate: input.expiryDate ?? null,
       lastVerified: input.lastVerified ?? null,
       active: input.active ?? true,
+      sourceType,
+      // Website text is historical evidence only (File 01 §3) — always provisional.
+      provisional: sourceType === "website" ? true : (input.provisional ?? false),
       updatedAt: new Date(),
     };
 

@@ -28,7 +28,9 @@ export type FactField =
   | "nomination_deadline"
   | "fees"
   | "taxes"
-  | "contact";
+  | "contact"
+  | "sponsors"
+  | "announcements";
 
 export const FACT_FIELDS: FactField[] = [
   "event_date",
@@ -39,7 +41,32 @@ export const FACT_FIELDS: FactField[] = [
   "fees",
   "taxes",
   "contact",
+  "sponsors",
+  "announcements",
 ];
+
+/**
+ * Where a knowledge document came from (File 01 §2 source priority, highest
+ * first). `website` content is historical evidence only and is always
+ * provisional.
+ */
+export type SourceType = "edition_config" | "evergreen" | "meeting_notes" | "website";
+
+export const SOURCE_TYPES: SourceType[] = ["edition_config", "evergreen", "meeting_notes", "website"];
+
+/** The three answer states (File 01 §5). Recorded on every assistant message. */
+export type AnswerState = "supported" | "advisory" | "unsupported";
+
+export const ANSWER_STATES: AnswerState[] = ["supported", "advisory", "unsupported"];
+
+/** Product identity (File 01 §12). Shared by the system prompt and the widget. */
+export const PRODUCT_IDENTITY_EN = {
+  name: "Stallion AI Assistant",
+  subtitle: "AI Chatbot by Digital Stallion",
+  /** The public greeting; may be adapted to the event. */
+  greeting:
+    "Hi, I'm Stallion AI Assistant. I can help with event information, participation, nominations and finding potentially relevant categories.",
+} as const;
 
 /**
  * One resolved fact. `confirmed=false` means the column is unset and the model
@@ -68,6 +95,10 @@ export interface RetrievedChunk {
   documentTitle?: string;
   source?: string;
   scope: string;
+  /** Source priority bucket (File 01 §2). */
+  sourceType?: SourceType | string;
+  /** Historical / website-derived: never to be presented as current. */
+  provisional?: boolean;
 }
 
 /** Result of the output grounding scan. */

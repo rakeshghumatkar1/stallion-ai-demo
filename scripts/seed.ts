@@ -43,6 +43,21 @@ const EVENT = {
     email: CONTACT_EMAIL,
     website: "https://example.com/india-2027",
   },
+  sponsors: [{ name: "Sample Sponsor (placeholder)", tier: "Gold", url: "https://example.com/sponsor" }],
+  // Temporary conditions: one in effect during the 2026 nomination window and
+  // one already expired, so the in-date filter is exercised by the tests.
+  announcements: [
+    {
+      text: "The early-bird rate of INR 12,000 per entry applies to entries submitted before 15 December 2026.",
+      effectiveDate: "2026-09-01",
+      expiryDate: "2026-12-15",
+    },
+    {
+      text: "Super early-bird rate closed.",
+      effectiveDate: "2026-06-01",
+      expiryDate: "2026-08-31",
+    },
+  ],
   status: "open",
 };
 
@@ -147,6 +162,18 @@ Nominations are submitted through the general nomination form. Agencies entering
   },
 ];
 
+// Website-derived text from the PREVIOUS edition (File 01 §3): loaded as
+// source_type 'website' + provisional, so the assistant sees it labelled
+// HISTORICAL and must never present these dates, fees or categories as current.
+const WEBSITE_DOCS = [
+  {
+    title: "Previous edition website text (historical)",
+    body: `From the awards website for the earlier India edition (historical, not confirmed for the current edition):
+
+Nominations closed on 15 November 2025. The entry fee was INR 12,500 per entry. Categories included Best Mobile App, Best Website, and Best Digital Campaign. The ceremony was held in Bengaluru.`,
+  },
+];
+
 /** Seed (or re-seed) the sample event. Exported so harnesses can call it in-process. */
 export async function seed() {
   console.log(`[seed] seeding sample event ${SLUG}…`);
@@ -167,7 +194,7 @@ export async function seed() {
 
   // 3. Replace our seed KB docs (chunks cascade), then ingest as approved so the
   //    assistant can use them immediately.
-  const seedTitles = [...EVERGREEN_DOCS, ...EVENT_DOCS].map((d) => d.title);
+  const seedTitles = [...EVERGREEN_DOCS, ...EVENT_DOCS, ...WEBSITE_DOCS].map((d) => d.title);
   await db
     .delete(kbDocuments)
     .where(
@@ -184,10 +211,25 @@ export async function seed() {
       title: doc.title,
       body: doc.body,
       source: "seed",
+      sourceType: "evergreen",
       approvalStatus: "approved",
       lastVerified: new Date(),
     });
     console.log(`[seed] evergreen "${doc.title}" → ${r.chunkCount} chunks`);
+  }
+  for (const doc of WEBSITE_DOCS) {
+    const r = await ingestDocument({
+      eventId: event.id,
+      scope: "event",
+      title: doc.title,
+      body: doc.body,
+      source: "seed (previous edition website)",
+      sourceType: "website",
+      provisional: true,
+      approvalStatus: "approved",
+      lastVerified: new Date(),
+    });
+    console.log(`[seed] website/historical "${doc.title}" → ${r.chunkCount} chunks`);
   }
   for (const doc of EVENT_DOCS) {
     const r = await ingestDocument({
@@ -196,6 +238,7 @@ export async function seed() {
       title: doc.title,
       body: doc.body,
       source: "seed",
+      sourceType: "edition_config",
       approvalStatus: "approved",
       lastVerified: new Date(),
     });

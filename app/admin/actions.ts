@@ -20,6 +20,7 @@ import { db } from "@/lib/db";
 import { events, handoffs, kbDocuments } from "@/lib/db/schema";
 import { getActiveEvent } from "@/lib/event/active";
 import { ingestDocument } from "@/lib/kb/ingest";
+import { SOURCE_TYPES, type SourceType } from "@/lib/types";
 
 export type LoginState = { error?: string };
 
@@ -92,6 +93,47 @@ const optionalJsonObject = z
     }
   });
 
+/** "" → null; otherwise must be a JSON array whose items match `item`. */
+function optionalJsonArrayOf<T extends z.ZodTypeAny>(item: T) {
+  return z
+    .string()
+    .trim()
+    .transform((v, ctx) => {
+      if (!v) return null;
+      let parsed: unknown;
+      try {
+        parsed = JSON.parse(v);
+      } catch {
+        ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Must be valid JSON" });
+        return z.NEVER;
+      }
+      const result = z.array(item).safeParse(parsed);
+      if (!result.success) {
+        ctx.addIssue({ code: z.ZodIssueCode.custom, message: `Must be a JSON array: ${result.error.issues[0]?.message}` });
+        return z.NEVER;
+      }
+      return result.data as z.infer<T>[];
+    });
+}
+
+const isoDateOrNull = z
+  .string()
+  .nullish()
+  .transform((v) => (v ? v : null))
+  .refine((v) => v === null || !Number.isNaN(new Date(v).getTime()), "Invalid ISO date");
+
+const sponsorSchema = z.object({
+  name: z.string().trim().min(1),
+  tier: z.string().nullish(),
+  url: z.string().nullish(),
+});
+
+const announcementSchema = z.object({
+  text: z.string().trim().min(1),
+  effectiveDate: isoDateOrNull,
+  expiryDate: isoDateOrNull,
+});
+
 function firstIssue(err: z.ZodError): string {
   const i = err.issues[0];
   return i ? `${i.path.join(".") || "form"}: ${i.message}` : "Invalid input";
@@ -112,6 +154,8 @@ const eventSchema = z.object({
   fees: optionalJsonObject,
   taxes: optionalJsonObject,
   contact: optionalJsonObject,
+  sponsors: optionalJsonArrayOf(sponsorSchema),
+  announcements: optionalJsonArrayOf(announcementSchema),
 });
 
 export async function updateEventAction(formData: FormData): Promise<void> {
@@ -131,6 +175,8 @@ export async function updateEventAction(formData: FormData): Promise<void> {
     fees: field(formData, "fees"),
     taxes: field(formData, "taxes"),
     contact: field(formData, "contact"),
+    sponsors: field(formData, "sponsors"),
+    announcements: field(formData, "announcements"),
   });
   if (!parsed.success) {
     redirect(`/admin/event?error=${encodeURIComponent(firstIssue(parsed.error))}`);
@@ -154,6 +200,8 @@ export async function updateEventAction(formData: FormData): Promise<void> {
       fees: d.fees as typeof events.$inferInsert.fees,
       taxes: d.taxes as typeof events.$inferInsert.taxes,
       contact: d.contact as typeof events.$inferInsert.contact,
+      sponsors: d.sponsors,
+      announcements: d.announcements,
       updatedAt: new Date(),
     })
     .where(eq(events.id, event.id));
@@ -171,6 +219,8 @@ const kbSchema = z.object({
   source: z.string().trim().max(500),
   approvalStatus: z.enum(["draft", "approved"]),
   active: z.enum(["on", ""]).optional(),
+  sourceType: z.enum(SOURCE_TYPES as [SourceType, ...SourceType[]]),
+  provisional: z.enum(["on", ""]).optional(),
   effectiveDate: optionalDate,
   expiryDate: optionalDate,
 });
@@ -187,6 +237,8 @@ export async function saveKbDocumentAction(formData: FormData): Promise<void> {
     source: field(formData, "source"),
     approvalStatus: field(formData, "approvalStatus"),
     active: field(formData, "active"),
+    sourceType: field(formData, "sourceType"),
+    provisional: field(formData, "provisional"),
     effectiveDate: field(formData, "effectiveDate"),
     expiryDate: field(formData, "expiryDate"),
   });
@@ -221,6 +273,8 @@ export async function saveKbDocumentAction(formData: FormData): Promise<void> {
       expiryDate: d.expiryDate,
       lastVerified: new Date(),
       active: d.active === "on",
+      sourceType: d.sourceType,
+      provisional: d.provisional === "on",
     });
     documentId = result.documentId;
   } catch (err) {
