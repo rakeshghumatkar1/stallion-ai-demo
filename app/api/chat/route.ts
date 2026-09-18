@@ -169,6 +169,15 @@ export async function POST(req: Request) {
       messages: modelMessages,
       tools: makeTools(ctx),
       maxSteps: 5,
+      // OpenAI "strict" tool schemas reject optional properties (get_form's
+      // category, every capture_lead field). Our Zod schemas already validate
+      // every tool argument server-side, so strict mode adds nothing here.
+      providerOptions: { openai: { strictSchemas: false } },
+      // The data stream masks errors from the visitor (see getErrorMessage
+      // below); log the real one server-side so failures are diagnosable.
+      onError({ error }) {
+        console.error("[chat] stream error", { conversationId: convId, error });
+      },
       async onFinish({ text, steps }) {
         // Tool results are typed per-tool by the SDK; with a dynamic tool set
         // they collapse to `never`, so read the generic shape explicitly.
