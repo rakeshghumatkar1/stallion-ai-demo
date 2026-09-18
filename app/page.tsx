@@ -298,7 +298,7 @@ export default async function DemoPage() {
         </details>
       </footer>
 
-      <Script src="/embed.js" strategy="afterInteractive" data-color={BRAND_GOLD} />
+      <Script src="/embed.js?v=mobile-fullscreen-20260918" strategy="afterInteractive" data-color={BRAND_GOLD} />
     </div>
   );
 }
