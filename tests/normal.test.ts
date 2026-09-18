@@ -46,12 +46,11 @@ describe("chunkText", () => {
   });
 
   it("splits long text on paragraph boundaries with overlap", () => {
-    const para = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. ".repeat(8).trim(); // ~460 chars
+    const para = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. ".repeat(8).trim();
     const text = [para, para, para, para].join("\n\n");
     const chunks = chunkText(text, { size: 1000, overlap: 100 });
     expect(chunks.length).toBeGreaterThan(1);
-    for (const c of chunks) expect(c.length).toBeLessThanOrEqual(1000 + 2); // allow the join
-    // Overlap: the tail of chunk N appears at the head of chunk N+1.
+    for (const c of chunks) expect(c.length).toBeLessThanOrEqual(1000 + 2);
     const tail = chunks[0]!.slice(-100);
     expect(chunks[1]!.startsWith(tail)).toBe(true);
   });
@@ -86,7 +85,15 @@ describe("system prompt assembly", () => {
   it("includes the event identity, the hard rule, and the context block", () => {
     const prompt = buildSystemPrompt({
       event: makeEvent(),
-      context: [{ id: "c1", content: "Entry fees apply per entry.", score: 0.9, scope: "evergreen", documentTitle: "How nominations work" }],
+      context: [
+        {
+          id: "c1",
+          content: "Entry fees apply per entry.",
+          score: 0.9,
+          scope: "evergreen",
+          documentTitle: "How nominations work",
+        },
+      ],
     });
     expect(prompt).toContain("Digital Stallion Awards India 2027");
     expect(prompt).toContain("THE ONE HARD RULE");
@@ -98,6 +105,17 @@ describe("system prompt assembly", () => {
     const prompt = buildSystemPrompt({ event: makeEvent(), context: [] });
     expect(prompt).toMatch(/no relevant approved knowledge-base passages/i);
     expect(prompt).toContain("log_unanswered");
+  });
+
+  it("includes proactive sales-conversation behaviour without weakening safety", () => {
+    const prompt = buildSystemPrompt({ event: makeEvent(), context: [] });
+    expect(prompt).toMatch(/virtual event sales assistant/i);
+    expect(prompt).toMatch(/never allow a dead end/i);
+    expect(prompt).toMatch(/every useful reply should finish with one relevant next-step question or clear CTA/i);
+    expect(prompt).toMatch(/if a visitor replies only with words such as "okay"/i);
+    expect(prompt).toMatch(/who should we use as the contact person/i);
+    expect(prompt).toMatch(/only after the visitor has clearly requested or agreed/i);
+    expect(prompt).toMatch(/never fill a gap from model memory/i);
   });
 });
 
@@ -127,9 +145,11 @@ describe("retrieval gating (latency, not looser)", () => {
 });
 
 describe("quick actions", () => {
-  it("cover the main visitor paths", () => {
+  it("cover the main conversion paths", () => {
     const labels = QUICK_ACTIONS.map((q) => q.label.toLowerCase());
-    expect(labels.some((l) => l.includes("brand"))).toBe(true);
+    expect(labels.some((l) => l.includes("event"))).toBe(true);
+    expect(labels.some((l) => l.includes("categor"))).toBe(true);
+    expect(labels.some((l) => l.includes("nomination"))).toBe(true);
     expect(labels.some((l) => l.includes("agency"))).toBe(true);
     expect(labels.some((l) => l.includes("sponsor"))).toBe(true);
     expect(labels.some((l) => l.includes("team"))).toBe(true);
