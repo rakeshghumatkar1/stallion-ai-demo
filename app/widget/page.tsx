@@ -27,6 +27,7 @@ const UI_EN = {
   you: "You",
   assistant: "Assistant",
   restart: "Restart",
+  close: "Close",
   mainMenu: "Main menu",
   startOver: "Start over",
   restartMenu: "Restart / main menu",
@@ -82,6 +83,14 @@ function restartConversation(): void {
   // A full reload guarantees both UI state and the conversation id are reset.
   // It is intentionally deterministic and does not depend on model behaviour.
   window.location.reload();
+}
+
+function closeWidget(): void {
+  if (window.parent !== window) {
+    window.parent.postMessage({ type: "stallion:close" }, "*");
+    return;
+  }
+  window.location.href = "/";
 }
 
 function Inlines({ inlines }: { inlines: Inline[] }) {
@@ -229,13 +238,23 @@ export default function WidgetPage() {
             <div className="truncate text-[10px] leading-tight text-slate-400">{UI_EN.subtitle}</div>
           </div>
         </div>
-        <button
-          type="button"
-          onClick={restartConversation}
-          className="shrink-0 rounded-full border border-white/20 px-2.5 py-1.5 text-[10px] font-medium text-slate-300 transition hover:border-brand-primary hover:text-brand-primary"
-        >
-          {UI_EN.restart}
-        </button>
+        <div className="flex shrink-0 items-center gap-1.5">
+          <button
+            type="button"
+            onClick={restartConversation}
+            className="rounded-full border border-white/20 px-2.5 py-1.5 text-[10px] font-medium text-slate-300 transition hover:border-brand-primary hover:text-brand-primary"
+          >
+            {UI_EN.restart}
+          </button>
+          <button
+            type="button"
+            onClick={closeWidget}
+            aria-label="Close chat"
+            className="rounded-full border border-white/20 px-2.5 py-1.5 text-[10px] font-medium text-slate-300 transition hover:border-brand-primary hover:text-brand-primary"
+          >
+            {UI_EN.close}
+          </button>
+        </div>
       </header>
 
       <p className="border-b border-slate-200 bg-white px-3 py-2 text-[10px] leading-snug text-slate-500 sm:px-4 sm:text-[11px]">
