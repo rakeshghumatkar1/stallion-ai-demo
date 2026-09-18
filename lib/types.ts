@@ -62,7 +62,6 @@ export const ANSWER_STATES: AnswerState[] = ["supported", "advisory", "unsupport
 /** Product identity (File 01 §12). Shared by the system prompt and the widget. */
 export const PRODUCT_IDENTITY_EN = {
   name: "Stallion AI Assistant",
-  subtitle: "AI Chatbot by Digital Stallion",
   /** The public greeting; may be adapted to the event. */
   greeting:
     "Hi, I'm Stallion AI Assistant. I can help with event information, participation, nominations and finding potentially relevant categories.",

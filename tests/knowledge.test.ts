@@ -139,7 +139,6 @@ describe("system prompt encodes File 01", () => {
     expect(prompt).toMatch(/help first, ask later/i);
     expect(prompt).toMatch(/mobile number ONLY if a callback is requested/);
     expect(prompt).toContain(PRODUCT_IDENTITY_EN.name);
-    expect(prompt).toContain(PRODUCT_IDENTITY_EN.subtitle);
     expect(prompt).toContain(PRODUCT_IDENTITY_EN.greeting);
   });
 

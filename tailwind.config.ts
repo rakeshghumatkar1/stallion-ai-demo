@@ -26,6 +26,8 @@ const config: Config = {
       fontFamily: {
         // Inter is loaded via next/font in app/layout.tsx (--font-inter).
         sans: ["var(--font-inter)", ...defaultTheme.fontFamily.sans],
+        // Playfair Display via next/font (--font-display) for editorial headings.
+        display: ["var(--font-display)", "Georgia", ...defaultTheme.fontFamily.serif],
       },
       colors: {
         brand: {

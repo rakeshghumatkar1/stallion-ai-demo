@@ -8,14 +8,14 @@
  * generates a conversation id once so all turns attach to one conversation.
  */
 import { useChat } from "@ai-sdk/react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { PRODUCT_IDENTITY_EN, QUICK_ACTIONS } from "@/lib/types";
+import { parseMarkdownLite, type Inline } from "@/lib/markdown-lite";
 
 // UI strings as data so a second language can be added by translation only.
 // Product identity (File 01 §12) is shared with the system prompt.
 const UI_EN = {
   title: PRODUCT_IDENTITY_EN.name,
-  subtitle: PRODUCT_IDENTITY_EN.subtitle,
   disclosure:
     "You're chatting with an AI assistant. It shares only confirmed event information and can connect you with the team for anything else.",
   welcome: PRODUCT_IDENTITY_EN.greeting,
@@ -36,27 +36,78 @@ function newConversationId(): string {
   });
 }
 
-/** Render plain text with newlines preserved and bare URLs made clickable. */
-function RichText({ text }: { text: string }) {
-  const pieces = text.split(/(https?:\/\/[^\s<>)]+)/g);
+function Inlines({ inlines }: { inlines: Inline[] }) {
   return (
-    <span className="whitespace-pre-wrap break-words">
-      {pieces.map((piece, i) =>
-        /^https?:\/\//.test(piece) ? (
+    <>
+      {inlines.map((n, i) =>
+        n.type === "bold" ? (
+          <strong key={i} className="font-semibold">
+            {n.text}
+          </strong>
+        ) : n.type === "link" ? (
           <a
             key={i}
-            href={piece}
+            href={n.href}
             target="_blank"
             rel="noopener noreferrer"
-            className="font-medium text-brand-primary-dark underline"
+            className="font-medium text-brand-primary-dark underline break-all"
           >
-            {piece}
+            {n.href}
           </a>
         ) : (
-          <span key={i}>{piece}</span>
+          <span key={i}>{n.text}</span>
         ),
       )}
-    </span>
+    </>
+  );
+}
+
+/**
+ * Render the assistant's text: the markdown subset it writes (bold, lists,
+ * headings, links) becomes React elements via lib/markdown-lite — never raw
+ * HTML, so nothing in a reply can inject markup.
+ */
+function RichText({ text }: { text: string }) {
+  const blocks = useMemo(() => parseMarkdownLite(text), [text]);
+  return (
+    <div className="space-y-2 break-words">
+      {blocks.map((b, i) => {
+        if (b.type === "heading") {
+          return (
+            <p key={i} className="font-semibold">
+              <Inlines inlines={b.inlines} />
+            </p>
+          );
+        }
+        if (b.type === "list") {
+          const cls = `${b.ordered ? "list-decimal" : "list-disc"} space-y-1 pl-5`;
+          const items = b.items.map((item, j) => (
+            <li key={j}>
+              <Inlines inlines={item} />
+            </li>
+          ));
+          return b.ordered ? (
+            <ol key={i} className={cls}>
+              {items}
+            </ol>
+          ) : (
+            <ul key={i} className={cls}>
+              {items}
+            </ul>
+          );
+        }
+        return (
+          <p key={i}>
+            {b.lines.map((line, j) => (
+              <span key={j}>
+                {j > 0 && <br />}
+                <Inlines inlines={line} />
+              </span>
+            ))}
+          </p>
+        );
+      })}
+    </div>
   );
 }
 
@@ -91,7 +142,6 @@ export default function WidgetPage() {
         </div>
         <div className="min-w-0">
           <div className="truncate text-sm font-semibold leading-tight text-brand-primary">{UI_EN.title}</div>
-          <div className="truncate text-xs text-white/60">{UI_EN.subtitle}</div>
         </div>
       </header>
 

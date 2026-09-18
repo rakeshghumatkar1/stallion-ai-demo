@@ -2,8 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
-/* The widget fills its iframe; the demo/admin pages use normal document flow. */
+/* The widget fills its iframe (its wrapper is min-h-screen); long pages such as
+   the host page scroll normally. min-height (not height) keeps the body as tall
+   as its content so nothing paints outside the document box. */
 html,
 body {
-  height: 100%;
+  min-height: 100%;
 }

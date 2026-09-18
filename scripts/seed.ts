@@ -27,7 +27,7 @@ const EVENT = {
   year: 2027,
   editionNumber: 3,
   eventDate: new Date("2027-03-19T13:00:00Z"),
-  venue: "Mumbai, India (venue details to be announced)",
+  venue: "Mumbai, India — exact venue to be announced",
   eligibilityPeriod: "Work live between 1 January 2026 and 31 December 2026",
   nominationOpen: new Date("2026-10-01T00:00:00Z"),
   nominationDeadline: new Date("2027-01-31T18:29:00Z"),

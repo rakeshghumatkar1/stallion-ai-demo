@@ -1,96 +1,324 @@
 import Script from "next/script";
 import Link from "next/link";
+import { and, asc, eq } from "drizzle-orm";
+import { db } from "@/lib/db";
+import { categories, type Event } from "@/lib/db/schema";
 import { getActiveEvent } from "@/lib/event/active";
+import { resolveFacts } from "@/lib/ai/tools";
+import { PRODUCT_IDENTITY_EN } from "@/lib/types";
 import { LaunchButton } from "./launch-button";
 
 /**
- * Demo host page. Stands in for an award site: it includes /embed.js exactly the
- * way a real site would, which injects the launcher + iframe. Presentation only.
+ * Demo host page — stands in for the award site. It includes /embed.js exactly
+ * the way a real site would, and everything factual on it (dates, venue,
+ * deadline, categories, contact) is read from the organiser-approved event
+ * configuration, never typed here. Presentation only; no chat logic.
  */
 export const dynamic = "force-dynamic";
 
+const BRAND_GOLD = "#D9B150";
+
+function ordinal(n: number): string {
+  const s = ["th", "st", "nd", "rd"] as const;
+  const v = n % 100;
+  return `${n}${s[(v - 20) % 10] ?? s[v] ?? s[0]}`;
+}
+
+async function loadPageData() {
+  let event: Event | null = null;
+  try {
+    event = await getActiveEvent();
+  } catch {
+    return { event: null, facts: [], cats: [] };
+  }
+  const facts = resolveFacts(event, ["event_date", "venue", "nomination_deadline", "eligibility_period"]);
+  let cats: Array<{ name: string; officialName: string | null; description: string | null }> = [];
+  try {
+    cats = await db
+      .select({ name: categories.name, officialName: categories.officialName, description: categories.description })
+      .from(categories)
+      .where(and(eq(categories.eventId, event.id), eq(categories.active, true)))
+      .orderBy(asc(categories.name));
+  } catch {
+    cats = [];
+  }
+  return { event, facts, cats };
+}
+
+const FACT_LABELS: Record<string, string> = {
+  event_date: "Ceremony",
+  venue: "Venue",
+  nomination_deadline: "Nomination deadline",
+  eligibility_period: "Eligibility period",
+};
+
+const primaryBtn =
+  "inline-flex items-center justify-center rounded-full bg-brand-primary px-7 py-3 text-sm font-semibold text-brand-fg transition-colors hover:bg-brand-primary-bright focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary/60";
+const outlineBtn =
+  "inline-flex items-center justify-center rounded-full border border-brand-primary/50 px-6 py-2.5 text-sm font-medium text-brand-primary transition-colors hover:border-brand-primary hover:bg-brand-primary/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary/60";
+
 export default async function DemoPage() {
   const slug = process.env.ACTIVE_EVENT_ID ?? "(ACTIVE_EVENT_ID not set)";
+  const { event, facts, cats } = await loadPageData();
 
-  // Show the real event name in the hero when the DB is reachable; fall back to
-  // the pinned slug so the page still renders without a database.
-  let eventName = "Digital Stallion Awards";
-  let eventMeta = "";
-  try {
-    const event = await getActiveEvent();
-    eventName = event.name;
-    eventMeta = [event.country, event.year].filter(Boolean).join(" · ");
-  } catch {
-    eventName = slug;
-  }
+  const country = event?.country === "IN" ? "India" : event?.country === "AE" ? "UAE" : event?.country;
+  const eyebrow = event
+    ? [event.editionNumber ? `${ordinal(event.editionNumber)} edition` : null, country, String(event.year)].filter(Boolean).join("  ·  ")
+    : slug;
+  const title = event?.name ?? "Digital Stallions Forum";
+  const contact = event?.contact ?? null;
 
   return (
-    <main className="relative flex min-h-screen flex-col bg-brand-dark text-white">
-      <section className="mx-auto flex w-full max-w-3xl flex-1 flex-col items-center justify-center px-6 py-20 text-center">
-        {/* White rounded tile — the event badge is a white-background JPG, so it
-            gets a tile with padding rather than sitting flat on the black hero. */}
-        <div className="mb-7 inline-flex items-center justify-center rounded-brand bg-white p-3 shadow-card">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/brand/stallion-badge.jpg"
-            alt="The Great Marketing &amp; Business Minds UAE 2026"
-            className="h-24 w-auto object-contain sm:h-28"
-          />
+    <div className="min-h-screen bg-brand-dark text-slate-200 selection:bg-brand-primary/30">
+      {/* ---------------------------------------------------------------- Nav */}
+      <header className="border-b border-white/10">
+        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
+          <a href="#top" className="flex items-center gap-3">
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-md bg-white p-1">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/brand/forum-logo.jpg" alt="Digital Stallions Forum" className="h-full w-full object-contain" />
+            </span>
+            <span className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-300">Digital Stallions Forum</span>
+          </a>
+          <nav className="hidden items-center gap-8 text-sm text-slate-400 md:flex">
+            <a href="#event" className="transition-colors hover:text-white">
+              The event
+            </a>
+            <a href="#categories" className="transition-colors hover:text-white">
+              Categories
+            </a>
+            <a href="#contact" className="transition-colors hover:text-white">
+              Contact
+            </a>
+            <LaunchButton className={outlineBtn}>Chat with the assistant</LaunchButton>
+          </nav>
         </div>
+      </header>
 
-        <p className="text-sm font-semibold uppercase tracking-[0.2em] text-brand-primary">
-          Digital Stallions Forum
-        </p>
-        <h1 className="mt-3 text-4xl font-bold tracking-tight text-brand-primary sm:text-5xl">
-          {eventName}
-        </h1>
-        {eventMeta && <p className="mt-2 text-white/60">{eventMeta}</p>}
+      <main id="top">
+        {/* --------------------------------------------------------------- Hero */}
+        <section className="mx-auto grid max-w-6xl gap-14 px-6 pb-20 pt-16 lg:grid-cols-[1.15fr_0.85fr] lg:items-center lg:pt-24">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.28em] text-brand-primary">{eyebrow}</p>
+            <h1 className="mt-5 font-display text-4xl font-semibold leading-[1.08] tracking-tight text-white sm:text-5xl lg:text-6xl">
+              {title}
+            </h1>
+            <p className="mt-6 max-w-xl text-lg leading-relaxed text-slate-400">
+              Recognising the brands, agencies and leaders shaping marketing and business. Explore the event, find the
+              categories that may fit your work, and start your nomination — with the organising team one step away.
+            </p>
+            <div className="mt-9 flex flex-wrap items-center gap-5">
+              <LaunchButton className={primaryBtn}>Start a conversation</LaunchButton>
+              <a href="#categories" className="text-sm font-medium text-slate-300 underline-offset-4 hover:text-white hover:underline">
+                See the categories
+              </a>
+            </div>
+            <p className="mt-8 max-w-lg text-xs leading-relaxed text-slate-500">
+              {PRODUCT_IDENTITY_EN.name}. It shares only organiser-approved event
+              information and connects you with the team for anything it cannot confirm.
+            </p>
+          </div>
 
-        <p className="mt-6 max-w-xl text-lg leading-relaxed text-white/80">
-          Meet your awards concierge. Ask about the event, find the categories that fit your work,
-          and start your nomination — with the team a click away.
-        </p>
+          <div className="space-y-6">
+            {/* Full 792×570 badge (the 150×150 crop cut the tiger). Shift by the
+                23px / 19px black letterbox so only the artwork shows. */}
+            <div className="rounded-lg border border-brand-primary/30 bg-white p-5 sm:p-8">
+              <div className="overflow-hidden">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/brand/stallion-badge.jpg"
+                  alt={title}
+                  className="block h-auto max-w-none"
+                  style={{ width: "105.6%", marginLeft: "-3.07%" }}
+                />
+              </div>
+            </div>
+            <dl className="divide-y divide-white/10 rounded-lg border border-white/10 bg-white/[0.03]">
+              {facts.map((f) => (
+                <div key={f.field} className="flex items-baseline justify-between gap-6 px-5 py-3.5">
+                  <dt className="text-xs uppercase tracking-[0.18em] text-slate-500">{FACT_LABELS[f.field] ?? f.field}</dt>
+                  <dd className={`text-right text-sm ${f.confirmed ? "text-slate-100" : "italic text-slate-500"}`}>
+                    {f.confirmed ? f.value : "To be confirmed"}
+                  </dd>
+                </div>
+              ))}
+              {facts.length === 0 && (
+                <div className="px-5 py-3.5 text-sm italic text-slate-500">
+                  Event details will appear once the event is configured.
+                </div>
+              )}
+            </dl>
+          </div>
+        </section>
 
-        <div className="mt-9">
-          <LaunchButton className="inline-flex items-center gap-2 rounded-full bg-brand-primary px-7 py-3.5 text-sm font-semibold text-brand-fg shadow-launcher transition hover:-translate-y-0.5 hover:bg-brand-primary-bright active:translate-y-0">
-            Chat with the assistant
-          </LaunchButton>
-          <p className="mt-3 text-xs text-white/40">
-            Or use the chat launcher in the bottom-right corner.
+        {/* ---------------------------------------------------- How it helps */}
+        <section id="event" className="border-t border-white/10">
+          <div className="mx-auto max-w-6xl px-6 py-20">
+            <div className="max-w-2xl">
+              <p className="text-xs font-semibold uppercase tracking-[0.28em] text-brand-primary">Your awards concierge</p>
+              <h2 className="mt-4 font-display text-3xl font-semibold text-white sm:text-4xl">Three things it can do for you today</h2>
+            </div>
+            <ol className="mt-12 grid gap-px overflow-hidden rounded-lg border border-white/10 bg-white/10 md:grid-cols-3">
+              {[
+                {
+                  n: "01",
+                  t: "Understand the event",
+                  d: "Dates, venue, eligibility period, fees and the nomination process — straight from the organiser's approved configuration.",
+                },
+                {
+                  n: "02",
+                  t: "Find categories that may fit",
+                  d: "Describe your work and get the categories that appear potentially relevant, with the reasoning. The awards team makes the final call.",
+                },
+                {
+                  n: "03",
+                  t: "Nominate, or talk to the team",
+                  d: "Get the right form when you're ready. For sponsorship, bulk entries or anything unusual, it hands you to the team with a summary.",
+                },
+              ].map((s) => (
+                <li key={s.n} className="bg-brand-dark p-8">
+                  <span className="font-display text-3xl text-brand-primary">{s.n}</span>
+                  <h3 className="mt-5 text-lg font-semibold text-white">{s.t}</h3>
+                  <p className="mt-3 text-sm leading-relaxed text-slate-400">{s.d}</p>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </section>
+
+        {/* ------------------------------------------------------- Categories */}
+        <section id="categories" className="border-t border-white/10">
+          <div className="mx-auto max-w-6xl px-6 py-20">
+            <div className="flex flex-wrap items-end justify-between gap-6">
+              <div className="max-w-2xl">
+                <p className="text-xs font-semibold uppercase tracking-[0.28em] text-brand-primary">Award categories</p>
+                <h2 className="mt-4 font-display text-3xl font-semibold text-white sm:text-4xl">
+                  {cats.length ? `${cats.length} categories open for nomination` : "Categories"}
+                </h2>
+              </div>
+              <LaunchButton className={outlineBtn}>Help me choose a category</LaunchButton>
+            </div>
+            {cats.length > 0 ? (
+              <ul className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {cats.map((c) => (
+                  <li
+                    key={c.name}
+                    className="rounded-lg border border-white/10 bg-white/[0.03] p-6 transition-colors hover:border-brand-primary/50"
+                  >
+                    <h3 className="font-semibold text-white">{c.officialName ?? c.name}</h3>
+                    {c.officialName && c.officialName !== c.name && <p className="mt-0.5 text-xs text-slate-500">{c.name}</p>}
+                    {c.description && <p className="mt-3 text-sm leading-relaxed text-slate-400">{c.description}</p>}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="mt-12 text-sm italic text-slate-500">The category list will appear once the event is configured.</p>
+            )}
+            <p className="mt-8 text-xs text-slate-500">
+              Category suggestions from the assistant are advisory. Eligibility and final placement are decided by the awards
+              team.
+            </p>
+          </div>
+        </section>
+
+        {/* ---------------------------------------------------------- Contact */}
+        <section id="contact" className="border-t border-white/10">
+          <div className="mx-auto grid max-w-6xl gap-10 px-6 py-20 lg:grid-cols-[1fr_auto] lg:items-center">
+            <div className="max-w-2xl">
+              <p className="text-xs font-semibold uppercase tracking-[0.28em] text-brand-primary">Speak with the team</p>
+              <h2 className="mt-4 font-display text-3xl font-semibold text-white sm:text-4xl">
+                Sponsorship, partnerships and bulk entries are handled in person
+              </h2>
+              <p className="mt-5 text-slate-400">
+                Start with the assistant and it will pass the team a summary of your enquiry, or reach the organisers
+                directly.
+              </p>
+              {contact && (contact.team || contact.email || contact.phone || contact.website) && (
+                <dl className="mt-8 grid gap-x-10 gap-y-3 text-sm sm:grid-cols-2">
+                  {contact.team && (
+                    <div>
+                      <dt className="text-xs uppercase tracking-[0.18em] text-slate-500">Team</dt>
+                      <dd className="mt-1 text-slate-100">{contact.team}</dd>
+                    </div>
+                  )}
+                  {contact.email && (
+                    <div>
+                      <dt className="text-xs uppercase tracking-[0.18em] text-slate-500">Email</dt>
+                      <dd className="mt-1">
+                        <a
+                          href={`mailto:${contact.email}`}
+                          className="text-slate-100 underline-offset-4 hover:text-brand-primary hover:underline"
+                        >
+                          {contact.email}
+                        </a>
+                      </dd>
+                    </div>
+                  )}
+                  {contact.phone && (
+                    <div>
+                      <dt className="text-xs uppercase tracking-[0.18em] text-slate-500">Phone</dt>
+                      <dd className="mt-1 text-slate-100">{contact.phone}</dd>
+                    </div>
+                  )}
+                  {contact.website && (
+                    <div>
+                      <dt className="text-xs uppercase tracking-[0.18em] text-slate-500">Website</dt>
+                      <dd className="mt-1">
+                        <a
+                          href={contact.website}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-slate-100 underline-offset-4 hover:text-brand-primary hover:underline"
+                        >
+                          {contact.website.replace(/^https?:\/\//, "")}
+                        </a>
+                      </dd>
+                    </div>
+                  )}
+                </dl>
+              )}
+            </div>
+            <LaunchButton className={primaryBtn}>Start a conversation</LaunchButton>
+          </div>
+        </section>
+      </main>
+
+      {/* ------------------------------------------------------------- Footer */}
+      <footer className="border-t border-white/10">
+        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-6 py-8 text-xs text-slate-500">
+          <p>
+            {PRODUCT_IDENTITY_EN.name}
           </p>
+          <p>Event information on this page comes from the organiser-approved configuration.</p>
         </div>
-      </section>
+        <details className="mx-auto max-w-6xl px-6 pb-8 text-xs text-slate-500">
+          <summary className="cursor-pointer select-none hover:text-slate-300">Developer details</summary>
+          <div className="mt-3 space-y-2 rounded-lg border border-white/10 p-4">
+            <div>
+              Pinned event: <code className="rounded bg-white/10 px-1.5 py-0.5 text-slate-300">{slug}</code>
+            </div>
+            <div>
+              Embed snippet:{" "}
+              <code className="rounded bg-white/10 px-1.5 py-0.5 text-slate-300">
+                {'<script src="https://<assistant-host>/embed.js" async></script>'}
+              </code>
+            </div>
+            <div className="space-x-4 pt-1">
+              <Link className="underline hover:text-brand-primary" href="/widget">
+                /widget
+              </Link>
+              <Link className="underline hover:text-brand-primary" href="/admin">
+                /admin
+              </Link>
+              <Link className="underline hover:text-brand-primary" href="/api/health">
+                /api/health
+              </Link>
+            </div>
+          </div>
+        </details>
+      </footer>
 
-      {/* Dev-only note — collapsed by default so the page reads as a real site. */}
-      <details className="mx-auto mb-10 w-full max-w-3xl px-6 text-sm">
-        <summary className="cursor-pointer select-none text-white/40 transition hover:text-white/70">
-          Developer details
-        </summary>
-        <div className="mt-3 space-y-2 rounded-brand border border-white/10 bg-white/5 p-4 text-white/70 shadow-bubble">
-          <div>
-            Pinned event: <code className="rounded bg-white/10 px-1.5 py-0.5">{slug}</code>
-          </div>
-          <div>
-            Embed snippet:{" "}
-            <code className="rounded bg-white/10 px-1.5 py-0.5">
-              {'<script src="https://<assistant-host>/embed.js" async></script>'}
-            </code>
-          </div>
-          <div className="space-x-4 pt-1">
-            <Link className="text-brand-primary underline hover:text-brand-primary-bright" href="/widget">
-              /widget
-            </Link>
-            <Link className="text-brand-primary underline hover:text-brand-primary-bright" href="/admin">
-              /admin
-            </Link>
-            <Link className="text-brand-primary underline hover:text-brand-primary-bright" href="/api/health">
-              /api/health
-            </Link>
-          </div>
-        </div>
-      </details>
-
-      <Script src="/embed.js" strategy="afterInteractive" />
-    </main>
+      <Script src="/embed.js" strategy="afterInteractive" data-color={BRAND_GOLD} />
+    </div>
   );
 }
