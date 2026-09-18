@@ -27,6 +27,8 @@ const UI_EN = {
   you: "You",
   assistant: "Assistant",
   restart: "Restart",
+  mainMenu: "Main menu",
+  startOver: "Start over",
   restartMenu: "Restart / main menu",
   nextStep: "Next step",
 };
@@ -53,6 +55,27 @@ function newConversationId(): string {
     const r = (Math.random() * 16) | 0;
     return (c === "x" ? r : (r & 0x3) | 0x8).toString(16);
   });
+}
+
+const RESET_COMMANDS = new Set([
+  "restart",
+  "restart chat",
+  "restart conversation",
+  "reset",
+  "reset chat",
+  "start over",
+  "start again",
+  "main menu",
+  "menu",
+]);
+
+function isResetCommand(value: string): boolean {
+  const normalized = value
+    .trim()
+    .toLowerCase()
+    .replace(/[.!?]+$/g, "")
+    .replace(/\s+/g, " ");
+  return RESET_COMMANDS.has(normalized);
 }
 
 function restartConversation(): void {
@@ -180,6 +203,15 @@ export default function WidgetPage() {
   const showNextActions =
     !isBusy && !error && messages.length > 0 && lastMessage?.role === "assistant" && Boolean(lastMessage.content);
 
+  function handleChatSubmit(event: React.FormEvent<HTMLFormElement>) {
+    if (isResetCommand(input)) {
+      event.preventDefault();
+      restartConversation();
+      return;
+    }
+    handleSubmit(event);
+  }
+
   return (
     <div className="flex h-full min-h-screen flex-col bg-white text-brand-fg">
       <header className="flex items-center justify-between gap-3 bg-brand-dark px-4 py-3">
@@ -271,7 +303,29 @@ export default function WidgetPage() {
         </div>
       </div>
 
-      <form onSubmit={handleSubmit} className="flex items-center gap-2 border-t border-slate-200 bg-white p-3">
+      <div className="flex items-center justify-between gap-3 border-t border-slate-200 bg-slate-50 px-3 py-2">
+        <span className="text-[10px] font-medium uppercase tracking-wider text-slate-400">
+          Navigation
+        </span>
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={restartConversation}
+            className="rounded-full border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium text-slate-600 transition hover:border-brand-primary hover:text-brand-fg"
+          >
+            {UI_EN.mainMenu}
+          </button>
+          <button
+            type="button"
+            onClick={restartConversation}
+            className="rounded-full border border-brand-primary bg-white px-3 py-1.5 text-xs font-medium text-brand-fg transition hover:bg-brand-primary"
+          >
+            {UI_EN.startOver}
+          </button>
+        </div>
+      </div>
+
+      <form onSubmit={handleChatSubmit} className="flex items-center gap-2 border-t border-slate-200 bg-white p-3">
         <input
           value={input}
           onChange={handleInputChange}
