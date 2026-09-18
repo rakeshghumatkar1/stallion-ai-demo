@@ -1,90 +1,64 @@
 /**
- * Vector retrieval (server-only) — ALWAYS event-filtered and approval-filtered.
+ * UAE-only knowledge retrieval for the production demo.
  *
- * The filter enforced here IS the safety boundary. On every read the model can
- * reach, retrieval only returns chunks whose document is:
- *   event_id = the single pinned production event
- *   AND active = true
- *   AND approval_status = 'approved'
- *   AND (effective_date IS NULL OR effective_date <= now)
- *   AND (expiry_date  IS NULL OR expiry_date  >= now)
- *
- * There is no code path here that can return another event's content, evergreen content, draft
- * content, inactive content, or out-of-date content. This is core to isolation.
+ * Knowledge is shipped with the application from the approved Drive-derived
+ * UAE package. There is no database/vector lookup here, so old India rows,
+ * evergreen rows and other events are technically unreachable.
  */
 import "server-only";
-import { and, cosineDistance, desc, eq, gt, gte, isNull, lte, or, sql } from "drizzle-orm";
-import { db } from "@/lib/db";
-import { kbChunks, kbDocuments, type ChunkMetadata } from "@/lib/db/schema";
-import { embed } from "@/lib/kb/embed";
+import { UAE_KNOWLEDGE_SECTIONS } from "@/lib/demo/uae-knowledge";
 import type { RetrievedChunk } from "@/lib/types";
 
 export interface RetrieveOptions {
   eventId: string;
   query: string;
   limit?: number;
-  /** Minimum cosine similarity (0..1) for a chunk to count as relevant. */
   minScore?: number;
 }
 
-export async function retrieve(opts: RetrieveOptions): Promise<RetrievedChunk[]> {
-  const { eventId, query } = opts;
-  const limit = opts.limit ?? 6;
-  const minScore = opts.minScore ?? 0.2;
-  const now = new Date();
-
-  if (!query.trim()) return [];
-
-  const queryVector = await embed(query);
-  const similarity = sql<number>`1 - (${cosineDistance(kbChunks.embedding, queryVector)})`;
-
-  const rows = await db
-    .select({
-      id: kbChunks.id,
-      content: kbChunks.content,
-      scope: kbChunks.scope,
-      metadata: kbChunks.metadata,
-      sourceType: kbDocuments.sourceType,
-      provisional: kbDocuments.provisional,
-      score: similarity,
-    })
-    .from(kbChunks)
-    .innerJoin(kbDocuments, eq(kbChunks.documentId, kbDocuments.id))
-    .where(
-      and(
-        // Single-KB production demo: exact pinned UAE event only.
-        // Evergreen and all other event documents are deliberately unreachable.
-        eq(kbDocuments.eventId, eventId),
-        eq(kbDocuments.scope, "event"),
-        // Approved, active, in-date only.
-        eq(kbDocuments.active, true),
-        eq(kbDocuments.approvalStatus, "approved"),
-        or(isNull(kbDocuments.effectiveDate), lte(kbDocuments.effectiveDate, now)),
-        or(isNull(kbDocuments.expiryDate), gte(kbDocuments.expiryDate, now)),
-        gt(similarity, minScore),
-      ),
-    )
-    .orderBy(desc(similarity))
-    .limit(limit);
-
-  return rows.map((r) => {
-    const meta = (r.metadata ?? {}) as ChunkMetadata;
-    return {
-      id: r.id,
-      content: r.content,
-      score: Number(r.score),
-      documentTitle: meta.documentTitle,
-      source: meta.source,
-      scope: r.scope,
-      sourceType: r.sourceType,
-      // Provisional chunks are still retrievable (they are approved context)
-      // but the prompt labels them HISTORICAL so they are never shown as current.
-      provisional: r.provisional,
-    } satisfies RetrievedChunk;
-  });
+function tokens(text: string): Set<string> {
+  return new Set(
+    text
+      .toLowerCase()
+      .replace(/[^a-z0-9+]+/g, " ")
+      .split(/\s+/)
+      .filter((w) => w.length > 2),
+  );
 }
 
-/** True when retrieval produced at least one relevant chunk. */
+export async function retrieve(opts: RetrieveOptions): Promise<RetrievedChunk[]> {
+  const query = opts.query.trim();
+  if (!query) return [];
+
+  const q = tokens(query);
+  const limit = opts.limit ?? 4;
+
+  const ranked = UAE_KNOWLEDGE_SECTIONS.map((section, index) => {
+    const keywordScore = section.keywords.reduce(
+      (score, keyword) => score + (q.has(keyword.toLowerCase()) || query.toLowerCase().includes(keyword.toLowerCase()) ? 3 : 0),
+      0,
+    );
+    const titleScore = [...tokens(section.title)].reduce((score, word) => score + (q.has(word) ? 1 : 0), 0);
+    return { section, score: keywordScore + titleScore, index };
+  })
+    .sort((a, b) => b.score - a.score || a.index - b.index);
+
+  const positive = ranked.filter((r) => r.score > 0);
+  const selected = (positive.length ? positive : ranked.slice(0, 2)).slice(0, limit);
+
+  return selected.map(({ section, score }) => ({
+    id: section.id,
+    content: section.content,
+    score: score || 0.1,
+    documentTitle: section.title,
+    source:
+      "Google Drive: 03 - Stallion AI Assistant - Edition Configuration - UAE Test",
+    scope: "event",
+    sourceType: "edition_config",
+    provisional: false,
+  }));
+}
+
 export function hasRelevant(chunks: RetrievedChunk[]): boolean {
   return chunks.length > 0;
 }
