@@ -2,10 +2,10 @@
   "name": "stallion-ai-assistant",
   "version": "0.1.0",
   "private": true,
-  "description": "Grounded, safe event and nomination assistant for Digital Stallion award sites (India + UAE).",
+  "description": "Grounded, safe UAE event and nomination assistant for Digital Stallion.",
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "vitest run && tsx --tsconfig scripts/tsconfig.json scripts/load-content.ts --event UAE-GMM-2026-TEST --event-only && next build",
     "start": "next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
