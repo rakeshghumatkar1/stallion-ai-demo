@@ -36,9 +36,9 @@ const FACT_LABELS: Record<string, string> = {
 };
 
 const primaryBtn =
-  "inline-flex items-center justify-center rounded-full bg-brand-primary px-7 py-3 text-sm font-semibold text-brand-fg transition-colors hover:bg-brand-primary-bright focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary/60";
+  "inline-flex w-full items-center justify-center rounded-full bg-brand-primary px-6 py-3 text-sm font-semibold text-brand-fg transition-colors hover:bg-brand-primary-bright focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary/60 sm:w-auto sm:px-7";
 const outlineBtn =
-  "inline-flex items-center justify-center rounded-full border border-brand-primary/50 px-6 py-2.5 text-sm font-medium text-brand-primary transition-colors hover:border-brand-primary hover:bg-brand-primary/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary/60";
+  "inline-flex w-full items-center justify-center rounded-full border border-brand-primary/50 px-5 py-2.5 text-sm font-medium text-brand-primary transition-colors hover:border-brand-primary hover:bg-brand-primary/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary/60 sm:w-auto sm:px-6";
 
 export default async function DemoPage() {
   const slug = getActiveEventSlug();
@@ -52,14 +52,15 @@ export default async function DemoPage() {
     <div className="min-h-screen bg-brand-dark text-slate-200 selection:bg-brand-primary/30">
       {/* ---------------------------------------------------------------- Nav */}
       <header className="border-b border-white/10">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
+        <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3 sm:px-6 sm:py-4">
           <a href="#top" className="flex items-center gap-3">
             <span className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-md bg-white p-1">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/brand/dsf-middle-east.svg" alt="Digital Stallions Forum" className="h-full w-full object-contain" />
             </span>
-            <span className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-300">Digital Stallions Forum · Middle East</span>
+            <span className="max-w-[175px] text-[10px] font-semibold uppercase leading-tight tracking-[0.12em] text-slate-300 sm:max-w-none sm:text-xs sm:tracking-[0.18em]">Digital Stallions Forum<span className="hidden sm:inline"> · Middle East</span></span>
           </a>
+          <LaunchButton className="inline-flex shrink-0 items-center justify-center rounded-full border border-brand-primary/60 px-3 py-2 text-xs font-semibold text-brand-primary md:hidden">Chat</LaunchButton>
           <nav className="hidden items-center gap-8 text-sm text-slate-400 md:flex">
             <a href="#event" className="transition-colors hover:text-white">
               The event
@@ -77,18 +78,18 @@ export default async function DemoPage() {
 
       <main id="top">
         {/* --------------------------------------------------------------- Hero */}
-        <section className="mx-auto grid max-w-6xl gap-14 px-6 pb-20 pt-16 lg:grid-cols-[1.15fr_0.85fr] lg:items-center lg:pt-24">
+        <section className="mx-auto grid max-w-6xl gap-9 px-4 pb-14 pt-10 sm:gap-12 sm:px-6 sm:pb-20 sm:pt-16 lg:grid-cols-[1.15fr_0.85fr] lg:items-center lg:gap-14 lg:pt-24">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.28em] text-brand-primary">{eyebrow}</p>
-            <h1 className="mt-5 font-display text-4xl font-semibold leading-[1.08] tracking-tight text-white sm:text-5xl lg:text-6xl">
+            <h1 className="mt-4 font-display text-3xl font-semibold leading-[1.08] tracking-tight text-white sm:mt-5 sm:text-5xl lg:text-6xl">
               {title}
             </h1>
-            <p className="mt-6 max-w-xl text-lg leading-relaxed text-slate-400">
+            <p className="mt-5 max-w-xl text-base leading-relaxed text-slate-400 sm:mt-6 sm:text-lg">
               Recognising marketing, digital and business achievement across the UAE. Explore the event, discover the categories that may fit your work, and move towards nomination with the organising team one step away.
             </p>
-            <div className="mt-9 flex flex-wrap items-center gap-5">
+            <div className="mt-7 flex flex-col items-stretch gap-3 sm:mt-9 sm:flex-row sm:flex-wrap sm:items-center sm:gap-5">
               <LaunchButton className={primaryBtn}>Start a conversation</LaunchButton>
-              <a href="#categories" className="text-sm font-medium text-slate-300 underline-offset-4 hover:text-white hover:underline">
+              <a href="#categories" className="inline-flex min-h-11 w-full items-center justify-center text-center text-sm font-medium text-slate-300 underline-offset-4 hover:text-white hover:underline sm:min-h-0 sm:w-auto">
                 See the categories
               </a>
             </div>
@@ -100,7 +101,7 @@ export default async function DemoPage() {
 
           <div className="space-y-6">
             {/* Middle East / UAE brand identity from the organiser-provided Drive assets. */}
-            <div className="rounded-lg border border-brand-primary/30 bg-white p-7 sm:p-10">
+            <div className="rounded-lg border border-brand-primary/30 bg-white p-5 sm:p-10">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src="/brand/dsf-middle-east.svg"
@@ -114,9 +115,9 @@ export default async function DemoPage() {
             </div>
             <dl className="divide-y divide-white/10 rounded-lg border border-white/10 bg-white/[0.03]">
               {facts.map((f) => (
-                <div key={f.field} className="flex items-baseline justify-between gap-6 px-5 py-3.5">
+                <div key={f.field} className="flex flex-col gap-1 px-4 py-3.5 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6 sm:px-5">
                   <dt className="text-xs uppercase tracking-[0.18em] text-slate-500">{FACT_LABELS[f.field] ?? f.field}</dt>
-                  <dd className={`text-right text-sm ${f.confirmed ? "text-slate-100" : "italic text-slate-500"}`}>
+                  <dd className={`text-left text-sm sm:text-right ${f.confirmed ? "text-slate-100" : "italic text-slate-500"}`}>
                     {f.confirmed ? f.value : "To be announced"}
                   </dd>
                 </div>
@@ -132,12 +133,12 @@ export default async function DemoPage() {
 
         {/* ---------------------------------------------------- How it helps */}
         <section id="event" className="border-t border-white/10">
-          <div className="mx-auto max-w-6xl px-6 py-20">
+          <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6 sm:py-20">
             <div className="max-w-2xl">
               <p className="text-xs font-semibold uppercase tracking-[0.28em] text-brand-primary">Your awards concierge</p>
               <h2 className="mt-4 font-display text-3xl font-semibold text-white sm:text-4xl">Three things it can do for you today</h2>
             </div>
-            <ol className="mt-12 grid gap-px overflow-hidden rounded-lg border border-white/10 bg-white/10 md:grid-cols-3">
+            <ol className="mt-9 grid gap-px overflow-hidden rounded-lg border border-white/10 bg-white/10 sm:mt-12 md:grid-cols-3">
               {[
                 {
                   n: "01",
@@ -155,7 +156,7 @@ export default async function DemoPage() {
                   d: "Get the right form when you're ready. For sponsorship, bulk entries or anything unusual, it hands you to the team with a summary.",
                 },
               ].map((s) => (
-                <li key={s.n} className="bg-brand-dark p-8">
+                <li key={s.n} className="bg-brand-dark p-6 sm:p-8">
                   <span className="font-display text-3xl text-brand-primary">{s.n}</span>
                   <h3 className="mt-5 text-lg font-semibold text-white">{s.t}</h3>
                   <p className="mt-3 text-sm leading-relaxed text-slate-400">{s.d}</p>
@@ -167,8 +168,8 @@ export default async function DemoPage() {
 
         {/* ------------------------------------------------------- Categories */}
         <section id="categories" className="border-t border-white/10">
-          <div className="mx-auto max-w-6xl px-6 py-20">
-            <div className="flex flex-wrap items-end justify-between gap-6">
+          <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6 sm:py-20">
+            <div className="flex flex-col items-stretch justify-between gap-5 sm:flex-row sm:flex-wrap sm:items-end sm:gap-6">
               <div className="max-w-2xl">
                 <p className="text-xs font-semibold uppercase tracking-[0.28em] text-brand-primary">Award categories</p>
                 <h2 className="mt-4 font-display text-3xl font-semibold text-white sm:text-4xl">
@@ -178,11 +179,11 @@ export default async function DemoPage() {
               <LaunchButton className={outlineBtn}>Help me choose a category</LaunchButton>
             </div>
             {cats.length > 0 ? (
-              <ul className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              <ul className="mt-9 grid gap-3 sm:mt-12 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
                 {cats.map((c) => (
                   <li
                     key={c.name}
-                    className="rounded-lg border border-white/10 bg-white/[0.03] p-6 transition-colors hover:border-brand-primary/50"
+                    className="rounded-lg border border-white/10 bg-white/[0.03] p-5 transition-colors hover:border-brand-primary/50 sm:p-6"
                   >
                     <h3 className="font-semibold text-white">{c.officialName ?? c.name}</h3>
                     {c.officialName && c.officialName !== c.name && <p className="mt-0.5 text-xs text-slate-500">{c.name}</p>}
@@ -202,7 +203,7 @@ export default async function DemoPage() {
 
         {/* ---------------------------------------------------------- Contact */}
         <section id="contact" className="border-t border-white/10">
-          <div className="mx-auto grid max-w-6xl gap-10 px-6 py-20 lg:grid-cols-[1fr_auto] lg:items-center">
+          <div className="mx-auto grid max-w-6xl gap-8 px-4 py-14 sm:px-6 sm:py-20 lg:grid-cols-[1fr_auto] lg:items-center lg:gap-10">
             <div className="max-w-2xl">
               <p className="text-xs font-semibold uppercase tracking-[0.28em] text-brand-primary">Speak with the team</p>
               <h2 className="mt-4 font-display text-3xl font-semibold text-white sm:text-4xl">
@@ -226,7 +227,7 @@ export default async function DemoPage() {
                       <dd className="mt-1">
                         <a
                           href={`mailto:${contact.email}`}
-                          className="text-slate-100 underline-offset-4 hover:text-brand-primary hover:underline"
+                          className="break-all text-slate-100 underline-offset-4 hover:text-brand-primary hover:underline"
                         >
                           {contact.email}
                         </a>
@@ -264,13 +265,13 @@ export default async function DemoPage() {
 
       {/* ------------------------------------------------------------- Footer */}
       <footer className="border-t border-white/10">
-        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-6 py-8 text-xs text-slate-500">
+        <div className="mx-auto flex max-w-6xl flex-col items-start justify-between gap-3 px-4 py-7 text-xs text-slate-500 sm:flex-row sm:flex-wrap sm:items-center sm:gap-4 sm:px-6 sm:py-8">
           <p>
             {PRODUCT_IDENTITY_EN.name}
           </p>
           <p>Event information on this page comes from the organiser-approved configuration.</p>
         </div>
-        <details className="mx-auto max-w-6xl px-6 pb-8 text-xs text-slate-500">
+        <details className="mx-auto max-w-6xl px-4 pb-8 text-xs text-slate-500 sm:px-6">
           <summary className="cursor-pointer select-none hover:text-slate-300">Developer details</summary>
           <div className="mt-3 space-y-2 rounded-lg border border-white/10 p-4">
             <div>
