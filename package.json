@@ -5,7 +5,7 @@
   "description": "Grounded, safe UAE event and nomination assistant for Digital Stallion.",
   "scripts": {
     "dev": "next dev",
-    "build": "tsx --tsconfig scripts/tsconfig.json scripts/load-content.ts --event UAE-GMM-2026-TEST --event-only && next build",
+    "build": "tsx --tsconfig scripts/tsconfig.json scripts/load-production-content.ts && next build",
     "start": "next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
